@@ -15,6 +15,7 @@ import PrescriptionRoutes from './routes/PrescriptionRoute.js';
 import Payment from "./routes/PaymentRoute.js";
 import PrescriptionMedicine from "./routes/PrescriptionMedicineRoute.js";
 
+
 dotenv.config();
 
 const app = express();
@@ -50,6 +51,14 @@ app.use(PrescriptionRoutes);
 app.use(Payment);
 app.use(PrescriptionMedicine);
 
+app.get('/check-db', async (req, res) => {
+    try {
+      await db.authenticate();
+      res.status(200).json({ message: 'Database is connected successfully.' });
+    } catch (error) {
+      res.status(500).json({ message: 'Failed to connect to the database.', error: error.message });
+    }
+  });
 
 // Menjalankan server
 app.listen(process.env.APP_PORT, () => {
