@@ -28,7 +28,7 @@ export const createFishExpertAnswer = async (req, res) => {
   try {
     const { fishExpert_id, answer, timestamp } = req.body;
 
-    if (!fishExpert_id || !answer || !timestamp) {
+    if (!fishExpert_id || !answer) {
       return res.status(400).json({ message: 'Data tidak lengkap' });
     }
 
