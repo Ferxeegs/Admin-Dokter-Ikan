@@ -4,4 +4,5 @@ export type Activity = {
     topic: string;
     tenagaAhli: string;
     status: string;
+    consultation_id: number;
   };

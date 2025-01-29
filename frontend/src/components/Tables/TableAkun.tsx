@@ -1,88 +1,93 @@
-import { Akun } from "@/types/akun";
+"use client";
 
-const akun: Akun[] = [
-  {
-    name: "Petambak 1",
-    email: `petambak1@gmail.com`,
-    role: "user",
-  },
-  {
-    name: "Petambak 2",
-    email: `petambak2@gmail.com`,
-    role: "user",
-  },
-  {
-    name: "Petambak 3",
-    email: `petambak3@gmail.com`,
-    role: "user",
-  },
-  {
-    name: "Petambak 4",
-    email: `petambak4@gmail.com`,
-    role: "user",
-  },
-  {
-    name: "Petambak 5",
-    email: `petambak5@gmail.com`,
-    role: "user",
-  },
-  {
-    name: "Petambak 6",
-    email: `petambak6@gmail.com`,
-    role: "user",
-  },
-];
+import { useEffect, useState } from "react";
+import { Akun } from "@/types/akun";
+import { FishExpert } from "@/types/fishexpert";
 
 const TableAkun = () => {
+  const [users, setUsers] = useState<Akun[]>([]);
+  const [fishExperts, setFishExperts] = useState<FishExpert[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch Users
+        const usersResponse = await fetch("http://localhost:9001/users");
+        const usersData: Akun[] = await usersResponse.json();
+        setUsers(usersData);
+
+        // Fetch Experts
+        const fishExpertsResponse = await fetch("http://localhost:9001/fishexperts");
+        const fishExpertsData: FishExpert[] = await fishExpertsResponse.json();
+        setFishExperts(fishExpertsData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <div className="max-w-full overflow-x-auto">
-        <table className="w-full table-auto">
-          <thead>
-            <tr className="bg-gray-2 text-left dark:bg-meta-4">
-              <th className="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
-                Nama
-              </th>
-              <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
-                Email
-              </th>
-              <th className="min-w-[120px] px-4 py-4 font-medium text-black dark:text-white">
-                Role
-              </th>
-              <th className="px-4 py-4 font-medium text-black dark:text-white">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {akun.map((akunItem, key) => (
-              <tr key={key}>
-                <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                  <h5 className="font-medium text-black dark:text-white">
-                    {akunItem.name}
-                  </h5>
-                </td>
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                  <p className="text-black dark:text-white">
-                    {akunItem.email}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                <p className="text-black dark:text-white">
-                    {akunItem.role}
-                  </p>
-                </td>
-                <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                  <div className="flex items-center space-x-3.5">
-                    <button className="text-primary">
-                      <p>edit</p>
-                    </button>
-                  </div>
-                </td>
+    <div className="flex flex-col gap-10">
+      {/* Tabel User */}
+      <div className="rounded-lg border border-stroke bg-white p-5 shadow-md dark:border-strokedark dark:bg-boxdark">
+        <h2 className="text-lg font-semibold text-black dark:text-white mb-4">Daftar User</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="bg-gray-200 text-left dark:bg-meta-4">
+                <th className="px-4 py-4 font-medium text-black dark:text-white">Nama</th>
+                <th className="px-4 py-4 font-medium text-black dark:text-white">Email</th>
+                <th className="px-4 py-4 font-medium text-black dark:text-white">Role</th>
+                <th className="px-4 py-4 font-medium text-black dark:text-white">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.user_id}>
+                  <td className="border-b px-4 py-5">{user.name}</td>
+                  <td className="border-b px-4 py-5">{user.email}</td>
+                  <td className="border-b px-4 py-5">{user.role}</td>
+                  <td className="border-b px-4 py-5">
+                    <button className="text-blue-500">Edit</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Tabel Expert */}
+      <div className="rounded-lg border border-stroke bg-white p-5 shadow-md dark:border-strokedark dark:bg-boxdark">
+        <h2 className="text-lg font-semibold text-black dark:text-white mb-4">Daftar Expert</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="bg-green-200 text-left dark:bg-meta-4">
+                <th className="px-4 py-4 font-medium text-black dark:text-white">Nama</th>
+                <th className="px-4 py-4 font-medium text-black dark:text-white">Email</th>
+                <th className="px-4 py-4 font-medium text-black dark:text-white">Spesialisasi</th>
+                <th className="px-4 py-4 font-medium text-black dark:text-white">Pengalaman</th>
+                <th className="px-4 py-4 font-medium text-black dark:text-white">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {fishExperts.map((expert) => (
+                <tr key={expert.fishExperts_id}>
+                  <td className="border-b px-4 py-5">{expert.name}</td>
+                  <td className="border-b px-4 py-5">{expert.email || "-"}</td>
+                  <td className="border-b px-4 py-5">{expert.specialization}</td>
+                  <td className="border-b px-4 py-5">{expert.experience}</td>
+                  <td className="border-b px-4 py-5">
+                    <button className="text-green-500">Edit</button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

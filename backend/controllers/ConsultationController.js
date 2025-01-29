@@ -103,20 +103,25 @@ export const updateConsultation = async (req, res) => {
       return res.status(404).json({ message: 'Konsultasi tidak ditemukan' });
     }
 
-    const { fish_expert_answer_id, consultation_status } = req.body;
+    const { fishExpert_id } = req.body; // Hanya menerima fishExpert_id dari frontend
 
-    // Log data yang diterima
-    console.log('Received fish_expert_answer_id:', fish_expert_answer_id);
-    console.log('Received consultation_status:', consultation_status);
+    console.log('=== Sebelum Update ===');
+    console.log('Existing consultation:', consultation.toJSON());
+    console.log('Received fishExpert_id:', fishExpert_id);
 
-    // Perbarui hanya kolom yang dibutuhkan
-    await consultation.update({
-      fish_expert_answer_id,
-      consultation_status,
-    });
+    // Validasi: Pastikan fishExpert_id dikirim
+    if (!fishExpert_id) {
+      return res.status(400).json({ message: 'fishExpert_id wajib dikirim' });
+    }
 
-    // Log data setelah diupdate
-    console.log('Updated consultation:', consultation);
+    // Perbarui fishExpert_id di database
+    await consultation.update({ fishExpert_id });
+
+    // Reload data terbaru dari database
+    await consultation.reload();
+
+    console.log('=== Setelah Update ===');
+    console.log('Updated consultation:', consultation.toJSON());
 
     res.status(200).json({ message: 'Konsultasi berhasil diperbarui', consultation });
   } catch (error) {
@@ -124,6 +129,7 @@ export const updateConsultation = async (req, res) => {
     res.status(500).json({ message: 'Gagal memperbarui konsultasi', error });
   }
 };
+
 
 
 // Fungsi untuk menghapus konsultasi berdasarkan ID
