@@ -12,11 +12,7 @@ const Akun = () => {
     <DefaultLayout>
       <Breadcrumb pageName="Tabel User" />
 
-      <div className="flex flex-col gap-10">
-        <TableAkun />
-      </div>
-
-      <div className="flex justify-end mt-5 space-x-4">
+      <div className="flex justify-end mt-5 space-x-4 mb-4">
         <button
           onClick={() => router.push("/adduser")}
           className="bg-blue-500 text-white rounded-2xl px-6 py-2 font-medium hover:bg-opacity-90"
@@ -30,6 +26,10 @@ const Akun = () => {
         >
           Tambah Expert
         </button>
+      </div>
+
+      <div className="flex flex-col gap-10">
+        <TableAkun />
       </div>
     </DefaultLayout>
   );

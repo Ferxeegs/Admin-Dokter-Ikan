@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";  // Mengimpor useRouter
 import { useEffect, useState } from "react";
 import { Akun } from "@/types/akun";
 import { FishExpert } from "@/types/fishexpert";
@@ -7,6 +8,7 @@ import { FishExpert } from "@/types/fishexpert";
 const TableAkun = () => {
   const [users, setUsers] = useState<Akun[]>([]);
   const [fishExperts, setFishExperts] = useState<FishExpert[]>([]);
+  const router = useRouter();  // Inisialisasi router
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,7 +52,17 @@ const TableAkun = () => {
                   <td className="border-b px-4 py-5">{user.email}</td>
                   <td className="border-b px-4 py-5">{user.role}</td>
                   <td className="border-b px-4 py-5">
-                    <button className="text-blue-500">Edit</button>
+                    <button className="text-blue-500"
+                    onClick={() => router.push(`/edituser/${user.user_id}`)} 
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="ml-4 text-green-500"
+                      onClick={() => router.push(`/userdetail/${user.user_id}`)} // Menggunakan router.push
+                    >
+                      Detail
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -81,7 +93,17 @@ const TableAkun = () => {
                   <td className="border-b px-4 py-5">{expert.specialization}</td>
                   <td className="border-b px-4 py-5">{expert.experience}</td>
                   <td className="border-b px-4 py-5">
-                    <button className="text-green-500">Edit</button>
+                    <button className="text-blue-500"
+                    onClick={() => router.push(`/editexpert/${expert.fishExperts_id}`)} 
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="ml-4 text-green-500"
+                      onClick={() => router.push(`/expertdetail/${expert.fishExperts_id}`)} 
+                    >
+                      Detail
+                    </button>
                   </td>
                 </tr>
               ))}
