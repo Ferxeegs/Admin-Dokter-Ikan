@@ -16,7 +16,7 @@ router.get('/consultations', getAllConsultations);
 router.get('/consultations/:id', getConsultation);
 router.get('/consultation', authenticate, getConsultationHistory)
 router.post('/consultations', authenticate, createConsultation);
-router.put('/consultations/:id', authenticate, updateConsultation);
+router.put('/consultations/:id', updateConsultation);
 router.delete('/consultations/:id', deleteConsultation);
 
 export default router;
