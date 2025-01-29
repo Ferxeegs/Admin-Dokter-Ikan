@@ -14,8 +14,8 @@ const router = express.Router();
 // Definisi route untuk mendapatkan semua konsultasi
 router.get('/consultations', getAllConsultations);
 router.get('/consultations/:id', getConsultation);
-router.get('/consultation', authenticate, getConsultationHistory)
-router.post('/consultations', authenticate, createConsultation);
+router.get('/consultation', getConsultationHistory)
+router.post('/consultations', createConsultation);
 router.put('/consultations/:id', updateConsultation);
 router.delete('/consultations/:id', deleteConsultation);
 

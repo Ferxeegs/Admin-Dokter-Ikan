@@ -14,8 +14,8 @@ const router = express.Router();
 
 router.get('/user-consultations', getAllUserConsultations);
 router.get('/user-consultations/:id', getUserConsultationById);
-router.post('/user-consultations', authenticate, validateConsultation, createUserConsultation);
+router.post('/user-consultations', validateConsultation, createUserConsultation);
 router.delete('/user-consultations', deleteUserConsultation);
-router.get('/user-consultation',authenticate,getUserConsultationHistory);``
+router.get('/user-consultation',getUserConsultationHistory);``
 
 export default router;

@@ -25,8 +25,8 @@ const TableTransaksi = () => {
     const fetchData = async () => {
       try {
         const [usersRes, consultationsRes] = await Promise.all([
-          fetch("http://localhost:9000/users"),
-          fetch("http://localhost:9000/user-consultations"),
+          fetch("http://localhost:9001/users"),
+          fetch("http://localhost:9001/user-consultations"),
         ]);
 
         if (!usersRes.ok || !consultationsRes.ok) {
