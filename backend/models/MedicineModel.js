@@ -30,6 +30,10 @@ const Medicine = db.define('Medicine', {
     type: DataTypes.STRING,  // URL gambar obat (atau path lokal)
     allowNull: true,         // Bisa opsional jika tidak ada gambar
   },
+  price: {
+    type: DataTypes.INTEGER,  // Dosis obat
+    allowNull: false,
+  },
 }, {
   tableName: 'medicine',     // Nama tabel sesuai dengan database
   timestamps: false,           // Menggunakan createdAt dan updatedAt

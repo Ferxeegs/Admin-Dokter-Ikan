@@ -11,7 +11,7 @@ const Payment = db.define('Payment', {
     primaryKey: true,
     autoIncrement: true
   },
-  medical_prescription_id: {
+    prescription_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -28,28 +28,40 @@ const Payment = db.define('Payment', {
     }
   },
   medicine_fee: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER, // Menggunakan INTEGER
     allowNull: false
   },
   consultation_fee: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 10000 // Nilai tetap 10000
   },
   total_fee: {
-    type: DataTypes.STRING,
-    allowNull: false
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0 // Default 0, akan dihitung sebelum disimpan
   },
   payment_status: {
     type: DataTypes.STRING,
-    allowNull: false
+    allowNull: false,
+    defaultValue: "Pending"
   }
 }, {
-  tableName: 'payment', // Nama tabel sesuai database
-  timestamps: false // Menggunakan kolom createdAt dan updatedAt
+  tableName: 'payment',
+  timestamps: false
 });
 
 // Relasi dengan MedicalPrescription dan User
-Payment.belongsTo(Prescription, { foreignKey: 'prescription_id' });
+Payment.belongsTo(Prescription, { foreignKey: 'medical_prescription_id' });
 Payment.belongsTo(User, { foreignKey: 'user_id' });
+
+// Hook untuk menghitung total_fee sebelum menyimpan data
+Payment.beforeCreate((payment) => {
+  payment.total_fee = payment.medicine_fee + payment.consultation_fee;
+});
+
+Payment.beforeUpdate((payment) => {
+  payment.total_fee = payment.medicine_fee + payment.consultation_fee;
+});
 
 export default Payment;

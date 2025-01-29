@@ -38,14 +38,11 @@ export const getPaymentById = async (req, res) => {
 // Fungsi untuk menambahkan pembayaran baru
 export const createPayment = async (req, res) => {
   try {
-    const {
-      medical_prescription_id,
-      user_id,
-      medicine_fee,
-      consultation_fee,
-      total_fee,
-      payment_status
-    } = req.body;
+    const { medical_prescription_id, user_id, medicine_fee, payment_status } = req.body;
+
+    // Pastikan consultation_fee selalu 10000
+    const consultation_fee = 10000;
+    const total_fee = parseInt(medicine_fee) + consultation_fee;
 
     const newPayment = await Payment.create({
       medical_prescription_id,
@@ -70,7 +67,19 @@ export const updatePayment = async (req, res) => {
       return res.status(404).json({ message: 'Data pembayaran tidak ditemukan' });
     }
 
-    await payment.update(req.body);
+    const { medicine_fee, payment_status } = req.body;
+
+    // Pastikan consultation_fee tetap 10000
+    const consultation_fee = 10000;
+    const total_fee = parseInt(medicine_fee) + consultation_fee;
+
+    await payment.update({
+      medicine_fee,
+      consultation_fee,
+      total_fee,
+      payment_status
+    });
+
     res.status(200).json({ message: 'Data pembayaran berhasil diperbarui', data: payment });
   } catch (error) {
     res.status(500).json({ message: 'Gagal memperbarui data pembayaran', error });

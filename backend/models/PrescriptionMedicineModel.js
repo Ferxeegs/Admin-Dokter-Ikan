@@ -1,7 +1,6 @@
 import { Sequelize } from 'sequelize';
 import db from '../config/Database.js';
-import Prescription from './PrescriptionModel.js';
-import Medicine from './MedicineModel.js';
+import Medicine from './MedicineModel.js'; // Import Medicine Model
 
 const { DataTypes } = Sequelize;
 
@@ -10,7 +9,7 @@ const PrescriptionMedicine = db.define('prescriptions_medicine', {
     type: DataTypes.INTEGER,
     primaryKey: true,
     references: {
-      model: Prescription,
+      model: 'Prescriptions', // Referensi ke tabel Prescriptions, bukan model
       key: 'prescription_id'
     }
   },
@@ -26,8 +25,5 @@ const PrescriptionMedicine = db.define('prescriptions_medicine', {
     tableName: 'prescription_medicines',
     timestamps: false
 });
-
-Prescription.belongsToMany(Medicine, { through: PrescriptionMedicine, foreignKey: 'prescription_id' });
-Medicine.belongsToMany(Prescription, { through: PrescriptionMedicine, foreignKey: 'medicine_id' });
 
 export default PrescriptionMedicine;
