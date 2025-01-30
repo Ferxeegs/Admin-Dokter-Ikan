@@ -1,15 +1,49 @@
-import React from "react";
+'use client';
+
+import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Metadata } from "next";
 import BlankLayout from "@/components/Layouts/BlankLayout";
-
-export const metadata: Metadata = {
-  title: "Sign-in",
-  description: "Sign-in to Dokter Ikan",
-};
+import { useRouter } from "next/navigation";
 
 const SignIn: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch("http://localhost:9001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      console.log("Received data:", data);
+
+      if (response.ok) {
+        // Periksa role pengguna
+        if (data.user && data.user.role === "admin") {
+          // Simpan token atau data user ke state/context/localStorage
+          localStorage.setItem("token", data.token); // Simpan token untuk otentikasi
+          router.push("/"); // Redirect ke halaman dashboard setelah login berhasil
+        } else {
+          setError("Hanya admin yang diizinkan untuk login.");
+        }
+      } else {
+        setError(data.message || "Login gagal");
+      }
+    } catch (err) {
+      setError("Terjadi kesalahan. Silakan coba lagi.");
+    }
+  };
+
   return (
     <BlankLayout>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -43,7 +77,8 @@ const SignIn: React.FC = () => {
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
                 Sign In to Dokter Ikan
               </h2>
-              <form>
+              {error && <p className="text-red-500 mb-4">{error}</p>}
+              <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
                     Email
@@ -53,6 +88,9 @@ const SignIn: React.FC = () => {
                       type="email"
                       placeholder="Enter your email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
                     />
                   </div>
                 </div>
@@ -65,6 +103,9 @@ const SignIn: React.FC = () => {
                       type="password"
                       placeholder="6+ Characters, 1 Capital letter"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 text-black outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
                     />
                   </div>
                 </div>
