@@ -26,8 +26,8 @@ export const getVendorById = async (req, res) => {
 // Fungsi untuk menambahkan vendor baru
 export const createVendor = async (req, res) => {
   try {
-    const { vendor_name, stock_information, vendor_address, contact } = req.body;
-    const newVendor = await Vendor.create({ vendor_name, stock_information, vendor_address, contact });
+    const { vendor_name, vendor_address, contact } = req.body;
+    const newVendor = await Vendor.create({ vendor_name, vendor_address, contact });
     res.status(201).json({ message: 'Vendor berhasil ditambahkan', newVendor });
   } catch (error) {
     res.status(500).json({ message: 'Gagal menambahkan vendor', error });
@@ -42,8 +42,8 @@ export const updateVendor = async (req, res) => {
       return res.status(404).json({ message: 'Vendor tidak ditemukan' });
     }
 
-    const { vendor_name, stock_information, vendor_address, contact } = req.body;
-    await vendor.update({ vendor_name, stock_information, vendor_address, contact });
+    const { vendor_name, vendor_address, contact } = req.body;
+    await vendor.update({ vendor_name, vendor_address, contact });
 
     res.status(200).json({ message: 'Vendor berhasil diperbarui', vendor });
   } catch (error) {

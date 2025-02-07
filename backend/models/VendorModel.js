@@ -14,10 +14,6 @@ const Vendor = db.define('Vendor', {
     type: DataTypes.STRING,
     allowNull: false
   },
-  stock_information: {
-    type: DataTypes.TEXT,
-    allowNull: true  // Opsional, tergantung pada kebutuhan Anda
-  },
   vendor_address: {
     type: DataTypes.STRING,
     allowNull: true

@@ -68,6 +68,42 @@ const menuGroups = [
         icon: (
           <img
             className="fill-current"
+            src="/images/icon/transaksi.svg"
+            alt="Transaksi Icon"
+            width={30}
+          />
+        ),
+        label: "Spesies Ikan",
+        route: "/spesiesikan",
+      },
+      {
+        icon: (
+          <img
+            className="fill-current"
+            src="/images/icon/transaksi.svg"
+            alt="Transaksi Icon"
+            width={30}
+          />
+        ),
+        label: "Obat",
+        route: "/obat",
+      },
+      {
+        icon: (
+          <img
+            className="fill-current"
+            src="/images/icon/transaksi.svg"
+            alt="Transaksi Icon"
+            width={30}
+          />
+        ),
+        label: "Vendor Obat",
+        route: "/vendorobat",
+      },
+      {
+        icon: (
+          <img
+            className="fill-current"
             src="/images/icon/settings.svg"
             alt="Settings Icon"
             width={30}

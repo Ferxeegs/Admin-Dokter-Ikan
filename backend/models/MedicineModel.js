@@ -34,6 +34,10 @@ const Medicine = db.define('Medicine', {
     type: DataTypes.INTEGER,  // Dosis obat
     allowNull: false,
   },
+  stock: {
+    type: DataTypes.INTEGER,  // Stok obat
+    allowNull: false,
+  },
 }, {
   tableName: 'medicine',     // Nama tabel sesuai dengan database
   timestamps: false,           // Menggunakan createdAt dan updatedAt

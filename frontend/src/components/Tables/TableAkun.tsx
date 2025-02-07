@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";  // Mengimpor useRouter
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Akun } from "@/types/akun";
 import { FishExpert } from "@/types/fishexpert";
@@ -8,27 +8,44 @@ import { FishExpert } from "@/types/fishexpert";
 const TableAkun = () => {
   const [users, setUsers] = useState<Akun[]>([]);
   const [fishExperts, setFishExperts] = useState<FishExpert[]>([]);
-  const router = useRouter();  // Inisialisasi router
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Fetch Users
-        const usersResponse = await fetch("http://localhost:9001/users");
-        const usersData: Akun[] = await usersResponse.json();
-        setUsers(usersData);
-
-        // Fetch Experts
-        const fishExpertsResponse = await fetch("http://localhost:9001/fishexperts");
-        const fishExpertsData: FishExpert[] = await fishExpertsResponse.json();
-        setFishExperts(fishExpertsData);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-
     fetchData();
   }, []);
+
+  const fetchData = async () => {
+    try {
+      const usersResponse = await fetch("http://localhost:9001/users");
+      const usersData: Akun[] = await usersResponse.json();
+      setUsers(usersData);
+
+      const fishExpertsResponse = await fetch("http://localhost:9001/fishexperts");
+      const fishExpertsData: FishExpert[] = await fishExpertsResponse.json();
+      setFishExperts(fishExpertsData);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const handleDelete = async (id: number, type: "user" | "expert") => {
+    const endpoint = type === "user" ? `users/${id}` : `fishexperts/${id}`;
+    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
+      try {
+        const response = await fetch(`http://localhost:9001/${endpoint}`, {
+          method: "DELETE",
+        });
+
+        if (!response.ok) {
+          throw new Error("Gagal menghapus data");
+        }
+
+        fetchData();
+      } catch (error) {
+        console.error("Error deleting data:", error);
+      }
+    }
+  };
 
   return (
     <div className="flex flex-col gap-10">
@@ -52,17 +69,9 @@ const TableAkun = () => {
                   <td className="border-b px-4 py-5">{user.email}</td>
                   <td className="border-b px-4 py-5">{user.role}</td>
                   <td className="border-b px-4 py-5">
-                    <button className="text-blue-500"
-                    onClick={() => router.push(`/edituser/${user.user_id}`)} 
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="ml-4 text-green-500"
-                      onClick={() => router.push(`/userdetail/${user.user_id}`)} // Menggunakan router.push
-                    >
-                      Detail
-                    </button>
+                    <button className="text-blue-500" onClick={() => router.push(`/edituser/${user.user_id}`)}>Edit</button>
+                    <button className="ml-4 text-green-500" onClick={() => router.push(`/userdetail/${user.user_id}`)}>Detail</button>
+                    <button className="ml-4 text-red-500" onClick={() => handleDelete(user.user_id, "user")}>Hapus</button>
                   </td>
                 </tr>
               ))}
@@ -93,17 +102,9 @@ const TableAkun = () => {
                   <td className="border-b px-4 py-5">{expert.specialization}</td>
                   <td className="border-b px-4 py-5">{expert.experience}</td>
                   <td className="border-b px-4 py-5">
-                    <button className="text-blue-500"
-                    onClick={() => router.push(`/editexpert/${expert.fishExperts_id}`)} 
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="ml-4 text-green-500"
-                      onClick={() => router.push(`/expertdetail/${expert.fishExperts_id}`)} 
-                    >
-                      Detail
-                    </button>
+                    <button className="text-blue-500" onClick={() => router.push(`/editexpert/${expert.fishExperts_id}`)}>Edit</button>
+                    <button className="ml-4 text-green-500" onClick={() => router.push(`/expertdetail/${expert.fishExperts_id}`)}>Detail</button>
+                    <button className="ml-4 text-red-500" onClick={() => handleDelete(expert.fishExperts_id, "expert")}>Hapus</button>
                   </td>
                 </tr>
               ))}

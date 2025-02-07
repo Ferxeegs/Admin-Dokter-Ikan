@@ -32,6 +32,7 @@ export const createMedicine = async (req, res) => {
       contain,
       dosage,
       price,
+      stock,
       medicine_image
     } = req.body;
 
@@ -42,6 +43,7 @@ export const createMedicine = async (req, res) => {
       contain,
       dosage,
       price,
+      stock,
       medicine_image
     });
 
@@ -73,6 +75,7 @@ export const updateMedicine = async (req, res) => {
       contain,
       dosage,
       price,
+      stock,
       medicine_image
     } = req.body;
 
@@ -82,6 +85,7 @@ export const updateMedicine = async (req, res) => {
       contain,
       dosage,
       price,
+      stock,
       medicine_image
     });
 
