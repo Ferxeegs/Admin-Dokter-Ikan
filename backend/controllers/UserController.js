@@ -8,24 +8,17 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Mencari pengguna di tabel User terlebih dahulu
-    let user = await User.findOne({ where: { email } });
-    let role = 'user'; // Default role
-    let userId = null; // Variabel untuk menyimpan ID pengguna
+    // Mencari pengguna di tabel User
+    const user = await User.findOne({ where: { email } });
 
+    // Jika pengguna tidak ditemukan
     if (!user) {
-      // Jika tidak ditemukan di tabel User, cari di tabel FishExpert
-      user = await FishExperts.findOne({ where: { email } });
-      role = 'expert'; // Ubah role jika ditemukan di tabel FishExpert
+      return res.status(404).json({ message: 'Email atau password salah' });
+    }
 
-      if (!user) {
-        // Jika tidak ditemukan di kedua tabel
-        return res.status(404).json({ message: 'Email atau password salah' });
-      }
-
-      userId = user.fishExperts_id; // Ambil ID dari tabel FishExperts
-    } else {
-      userId = user.user_id; // Ambil ID dari tabel User
+    // Periksa apakah role pengguna adalah admin
+    if (user.role.toLowerCase() !== 'admin') {
+      return res.status(403).json({ message: 'Hanya admin yang diizinkan untuk login' });
     }
 
     // Memverifikasi apakah password cocok
@@ -36,7 +29,7 @@ export const loginUser = async (req, res) => {
 
     // Membuat token JWT
     const token = jwt.sign(
-      { id: userId, name: user.name, email: user.email, role },
+      { id: user.user_id, name: user.name, email: user.email, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
@@ -46,10 +39,10 @@ export const loginUser = async (req, res) => {
       message: 'Login berhasil',
       token,
       user: {
-        id: userId, // Gunakan ID yang sesuai (user_id atau fishExperts_id)
+        id: user.user_id,
         name: user.name,
         email: user.email,
-        role,
+        role: user.role,
       },
     });
   } catch (error) {
