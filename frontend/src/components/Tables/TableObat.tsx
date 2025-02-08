@@ -1,13 +1,15 @@
 "use client";
 
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Medicine } from "@/types/medicine";
 
 const TableObat = () => {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
+  const [filteredMedicines, setFilteredMedicines] = useState<Medicine[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -19,6 +21,7 @@ const TableObat = () => {
         }
         const data = await response.json();
         setMedicines(data);
+        setFilteredMedicines(data);
       } catch (err) {
         setError("Terjadi kesalahan saat mengambil data obat.");
       } finally {
@@ -42,17 +45,36 @@ const TableObat = () => {
         throw new Error("Gagal menghapus data obat");
       }
 
-      setMedicines(medicines.filter((medicine) => medicine.medicine_id !== id));
+      const updatedMedicines = medicines.filter((medicine) => medicine.medicine_id !== id);
+      setMedicines(updatedMedicines);
+      setFilteredMedicines(updatedMedicines);
     } catch (error) {
       console.error("Error deleting medicine:", error);
     }
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLowerCase();
+    setSearch(value);
+    const filtered = medicines.filter((medicine) =>
+      medicine.medicine_name.toLowerCase().includes(value)
+    );
+    setFilteredMedicines(filtered);
+  };
+
   return (
     <div className="p-6 bg-white shadow-md rounded-lg">
       <div className="flex justify-between mb-4">
-        <h2 className="text-lg font-semibold">Daftar Obat</h2>
+        {/* Input Pencarian */}
+        <input
+          type="text"
+          placeholder="Cari nama obat..."
+          value={search}
+          onChange={handleSearch}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
+
       <div className="overflow-x-auto">
         {loading ? (
           <p className="text-gray-600">Memuat data...</p>
@@ -71,7 +93,7 @@ const TableObat = () => {
               </tr>
             </thead>
             <tbody>
-              {medicines.map((medicine) => (
+              {filteredMedicines.map((medicine) => (
                 <tr key={medicine.medicine_id} className="hover:bg-gray-50">
                   <td className="px-4 py-2">{medicine.medicine_name}</td>
                   <td className="px-4 py-2">{medicine.contain}</td>
@@ -100,6 +122,13 @@ const TableObat = () => {
                   </td>
                 </tr>
               ))}
+              {filteredMedicines.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="text-center py-4 text-gray-500">
+                    Tidak ada data yang ditemukan.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         )}

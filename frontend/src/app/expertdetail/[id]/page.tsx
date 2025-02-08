@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { FishExpert } from "@/types/fishexpert";
 
 const FishExpertDetailPage = ({ params }: { params: { id: string } }) => {
   const [expert, setExpert] = useState<FishExpert | null>(null);
+  const router = useRouter();
   const { id } = params;
 
   useEffect(() => {
@@ -32,7 +34,7 @@ const FishExpertDetailPage = ({ params }: { params: { id: string } }) => {
     <DefaultLayout>
       <Breadcrumb pageName="Detail Fish Expert" />
 
-      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md relative">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Detail Fish Expert</h2>
 
         <div>
@@ -43,6 +45,14 @@ const FishExpertDetailPage = ({ params }: { params: { id: string } }) => {
           <p><strong>Pengalaman:</strong> {expert.experience}</p>
           <p><strong>Role:</strong> {expert.role}</p>
         </div>
+
+        {/* Tombol Kembali di kanan bawah */}
+        <button
+          onClick={() => router.push("/akun")}
+          className="absolute bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
+        >
+          Kembali
+        </button>
       </div>
     </DefaultLayout>
   );

@@ -1,19 +1,19 @@
 import { Metadata } from "next";
-import DefaultLayout from "@/components/Layouts/DefaultLayout";
+// import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Dashboard from "@/components/Dashboard/Dashboard";
-
+import SignIn from "./auth/signin/page";
 export const metadata: Metadata = {
   title:
-    "Dashboard Admin",
-  description: "Dashboard admin Dokter Ikan",
+    "Admin Dokter Ikan",
+  description: "Login Admin Dokter Ikan",
 };
 
 export default function Home() {
   return (
     <>
-      <DefaultLayout>
-        <Dashboard />
-      </DefaultLayout>
+      {/* <DefaultLayout> */}
+        <SignIn />
+      {/* </DefaultLayout> */}
     </>
   );
 }

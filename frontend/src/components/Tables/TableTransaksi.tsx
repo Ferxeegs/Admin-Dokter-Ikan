@@ -18,6 +18,7 @@ interface Transaksi {
 
 const TableTransaksi = () => {
   const [transaksi, setTransaksi] = useState<Transaksi[]>([]);
+  const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
@@ -59,11 +60,24 @@ const TableTransaksi = () => {
     fetchData();
   }, []);
 
+  // Filter transaksi berdasarkan input pencarian
+  const filteredTransaksi = transaksi.filter((item) =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <div className="max-w-full overflow-x-auto">
-        
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Cari nama user..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
+      <div className="max-w-full overflow-x-auto">
         {loading ? (
           <p className="text-gray-600">Memuat data...</p>
         ) : error ? (
@@ -87,28 +101,36 @@ const TableTransaksi = () => {
               </tr>
             </thead>
             <tbody>
-              {transaksi.map((item) => (
-                <tr key={item.user_consultation_id}>
-                  <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-                    <h5 className="font-medium text-black dark:text-white">{item.name}</h5>
-                  </td>
-                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{item.email}</p>
-                  </td>
-                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                    <p className="text-black dark:text-white">{item.topikKonsultasi}</p>
-                  </td>
-                  <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-                    <span
-                      className={`px-3 py-1 rounded-lg text-white ${
-                        item.status === "Pending" ? "bg-yellow-500" : "bg-green-500"
-                      }`}
-                    >
-                      {item.status}
-                    </span>
+              {filteredTransaksi.length > 0 ? (
+                filteredTransaksi.map((item) => (
+                  <tr key={item.user_consultation_id}>
+                    <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
+                      <h5 className="font-medium text-black dark:text-white">{item.name}</h5>
+                    </td>
+                    <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                      <p className="text-black dark:text-white">{item.email}</p>
+                    </td>
+                    <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                      <p className="text-black dark:text-white">{item.topikKonsultasi}</p>
+                    </td>
+                    <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                      <span
+                        className={`px-3 py-1 rounded-lg text-white ${
+                          item.status === "Pending" ? "bg-yellow-500" : "bg-green-500"
+                        }`}
+                      >
+                        {item.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="text-center py-5 text-gray-500">
+                    User tidak ditemukan.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         )}

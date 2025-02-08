@@ -61,7 +61,7 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
       }
 
       // Jika sukses, kembali ke halaman detail user
-      router.push(`/userdetail/${id}`);
+      router.push(`/akun`);
     } catch (err) {
       setError("Terjadi kesalahan. Coba lagi.");
     } finally {
@@ -136,7 +136,7 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
             disabled={loading}
           >
-            {loading ? "Memperbarui..." : "Perbarui User"}
+            {loading ? "Memperbarui..." : "Update User"}
           </button>
         </form>
       </div>

@@ -8,6 +8,8 @@ import { FishExpert } from "@/types/fishexpert";
 const TableAkun = () => {
   const [users, setUsers] = useState<Akun[]>([]);
   const [fishExperts, setFishExperts] = useState<FishExpert[]>([]);
+  const [searchUser, setSearchUser] = useState("");
+  const [searchExpert, setSearchExpert] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -52,6 +54,13 @@ const TableAkun = () => {
       {/* Tabel User */}
       <div className="rounded-lg border border-stroke bg-white p-5 shadow-md dark:border-strokedark dark:bg-boxdark">
         <h2 className="text-lg font-semibold text-black dark:text-white mb-4">Daftar User</h2>
+        <input
+          type="text"
+          placeholder="Cari nama user..."
+          className="w-full p-2 mb-4 border rounded"
+          value={searchUser}
+          onChange={(e) => setSearchUser(e.target.value)}
+        />
         <div className="overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -63,7 +72,7 @@ const TableAkun = () => {
               </tr>
             </thead>
             <tbody>
-              {users.map((user) => (
+              {users.filter(user => user.name.toLowerCase().includes(searchUser.toLowerCase())).map((user) => (
                 <tr key={user.user_id}>
                   <td className="border-b px-4 py-5">{user.name}</td>
                   <td className="border-b px-4 py-5">{user.email}</td>
@@ -83,6 +92,13 @@ const TableAkun = () => {
       {/* Tabel Expert */}
       <div className="rounded-lg border border-stroke bg-white p-5 shadow-md dark:border-strokedark dark:bg-boxdark">
         <h2 className="text-lg font-semibold text-black dark:text-white mb-4">Daftar Expert</h2>
+        <input
+          type="text"
+          placeholder="Cari nama expert..."
+          className="w-full p-2 mb-4 border rounded"
+          value={searchExpert}
+          onChange={(e) => setSearchExpert(e.target.value)}
+        />
         <div className="overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -95,7 +111,7 @@ const TableAkun = () => {
               </tr>
             </thead>
             <tbody>
-              {fishExperts.map((expert) => (
+              {fishExperts.filter(expert => expert.name.toLowerCase().includes(searchExpert.toLowerCase())).map((expert) => (
                 <tr key={expert.fishExperts_id}>
                   <td className="border-b px-4 py-5">{expert.name}</td>
                   <td className="border-b px-4 py-5">{expert.email || "-"}</td>

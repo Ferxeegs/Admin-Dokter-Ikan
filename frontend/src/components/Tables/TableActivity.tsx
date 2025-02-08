@@ -9,13 +9,13 @@ const TableActivity = () => {
   const [visibleDropdownIndex, setVisibleDropdownIndex] = useState<number | null>(null);
   const [selectedExpert, setSelectedExpert] = useState<any | null>(null);
   const [selectedConsultationId, setSelectedConsultationId] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     fetchActivities();
     fetchFishExperts();
   }, []);
 
-  // Fungsi untuk fetch data konsultasi
   const fetchActivities = async () => {
     try {
       const response = await fetch("http://localhost:9001/consultations");
@@ -34,7 +34,6 @@ const TableActivity = () => {
     }
   };
 
-  // Fungsi untuk fetch data tenaga ahli
   const fetchFishExperts = async () => {
     try {
       const response = await fetch("http://localhost:9001/fishexperts");
@@ -45,13 +44,11 @@ const TableActivity = () => {
     }
   };
 
-  // Handle klik kolom tenaga ahli
   const handleExpertClick = (index: number, consultation_id: number) => {
     setSelectedConsultationId(consultation_id);
     setVisibleDropdownIndex(visibleDropdownIndex === index ? null : index);
   };
 
-  // Handle pemilihan tenaga ahli
   const handleExpertSelection = (expert: any) => {
     if (!expert || typeof expert.fishExperts_id === "undefined") {
       console.error("Error: Expert selection is invalid. Expert data:", expert);
@@ -61,7 +58,6 @@ const TableActivity = () => {
     setVisibleDropdownIndex(null);
   };
 
-  // Fungsi untuk update konsultasi dengan tenaga ahli yang dipilih
   const closePopup = async () => {
     if (selectedExpert && selectedConsultationId !== null) {
       try {
@@ -76,7 +72,7 @@ const TableActivity = () => {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              fishExpert_id: selectedExpert.fishExperts_id, // HARUS fishExperts_id
+              fishExpert_id: selectedExpert.fishExperts_id,
             }),
           }
         );
@@ -94,8 +90,21 @@ const TableActivity = () => {
     }
   };
 
+  const filteredActivities = activities.filter((activity) =>
+    activity.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className="mb-4">
+        <input
+          type="text"
+          placeholder="Cari nama user..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 border rounded-md"
+        />
+      </div>
       <div className="max-w-full overflow-x-auto">
         <table className="w-full table-auto">
           <thead>
@@ -108,68 +117,54 @@ const TableActivity = () => {
             </tr>
           </thead>
           <tbody>
-            {activities.map((activityItem, key) => (
-              <tr key={key}>
-                <td className="border-b px-4 py-5 xl:pl-11">{activityItem.name}</td>
-                <td className="border-b px-4 py-5">{activityItem.email}</td>
-                <td className="border-b px-4 py-5">{activityItem.topic}</td>
-                <td
-                  className="border-b px-4 py-5 cursor-pointer relative"
-                  onClick={() => handleExpertClick(key, activityItem.consultation_id)}
-                >
-                  {activityItem.tenagaAhli}
-                  {visibleDropdownIndex === key && (
-                    <div className="absolute bg-white shadow-lg rounded-md mt-2 w-48 max-h-60 overflow-y-auto border border-gray-200 z-10">
-                      <ul>
-                        {fishExperts.map((expert) => (
-                          <li
-                            key={expert.id}
-                            className="py-2 px-4 cursor-pointer hover:bg-gray-200"
-                            onClick={() => handleExpertSelection(expert)}
-                          >
-                            {expert.name}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </td>
-                <td className="border-b px-4 py-5">
-                  <span
-                    className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
+            {filteredActivities.length > 0 ? (
+              filteredActivities.map((activityItem, key) => (
+                <tr key={key}>
+                  <td className="border-b px-4 py-5 xl:pl-11">{activityItem.name}</td>
+                  <td className="border-b px-4 py-5">{activityItem.email}</td>
+                  <td className="border-b px-4 py-5">{activityItem.topic}</td>
+                  <td
+                    className="border-b px-4 py-5 cursor-pointer relative"
+                    onClick={() => handleExpertClick(key, activityItem.consultation_id)}
+                  >
+                    {activityItem.tenagaAhli}
+                    {visibleDropdownIndex === key && (
+                      <div className="absolute bg-white shadow-lg rounded-md mt-2 w-48 max-h-60 overflow-y-auto border border-gray-200 z-10">
+                        <ul>
+                          {fishExperts.map((expert) => (
+                            <li
+                              key={expert.id}
+                              className="py-2 px-4 cursor-pointer hover:bg-gray-200"
+                              onClick={() => handleExpertSelection(expert)}
+                            >
+                              {expert.name}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                  </td>
+                  <td className="border-b px-4 py-5">
+                    <span className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
                       activityItem.status === "Pending"
                         ? "bg-warning text-warning"
                         : activityItem.status === "Selesai"
                         ? "bg-success text-success"
                         : "bg-danger text-danger"
-                    }`}
-                  >
-                    {activityItem.status}
-                  </span>
-                </td>
+                    }`}>
+                      {activityItem.status}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={5} className="text-center py-5">User yang dicari tidak ditemukan.</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
       </div>
-
-      {selectedExpert && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-5 rounded-md shadow-lg w-1/3">
-            <h3 className="text-xl font-semibold">Detail Tenaga Ahli</h3>
-            <p><strong>Nama:</strong> {selectedExpert.name}</p>
-            <p><strong>Telepon:</strong> {selectedExpert.phone_number}</p>
-            <p><strong>Spesialisasi:</strong> {selectedExpert.specialization}</p>
-            <p><strong>Pengalaman:</strong> {selectedExpert.experience}</p>
-            <button
-              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
-              onClick={closePopup}
-            >
-              OK
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

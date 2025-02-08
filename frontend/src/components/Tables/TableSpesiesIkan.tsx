@@ -1,11 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FishType } from "@/types/fish";
 
 const TableSpesiesIkan = () => {
   const [fishTypes, setFishTypes] = useState<FishType[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -48,11 +49,24 @@ const TableSpesiesIkan = () => {
     }
   };
 
+  // Filter berdasarkan input pencarian
+  const filteredFishTypes = fishTypes.filter((fish) =>
+    fish.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="p-6 bg-white shadow-md rounded-lg">
-      <div className="flex justify-between mb-4">
-        <h2 className="text-lg font-semibold">Daftar Spesies Ikan</h2>
+      <div className="flex justify-between items-center mb-4">
+        {/* Input pencarian */}
+        <input
+          type="text"
+          placeholder="Cari spesies ikan..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
+
       <div className="overflow-x-auto">
         {loading ? (
           <p className="text-gray-600">Memuat data...</p>
@@ -69,33 +83,41 @@ const TableSpesiesIkan = () => {
               </tr>
             </thead>
             <tbody>
-              {fishTypes.map((fish) => (
-                <tr key={fish.fish_type_id} className="hover:bg-gray-50">
-                  <td className="px-4 py-2">{fish.name}</td>
-                  <td className="px-4 py-2">{fish.description}</td>
-                  <td className="px-4 py-2">{fish.habitat}</td>
-                  <td className="border-b px-4 py-5">
-                    <button
-                      className="ml-4 text-blue-500"
-                      onClick={() => router.push(`/editspesiesikan/${fish.fish_type_id}`)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="ml-4 text-green-500"
-                      onClick={() => router.push(`/spesiesikandetail/${fish.fish_type_id}`)}
-                    >
-                      Detail
-                    </button>
-                    <button
-                      className="ml-4 text-red-500"
-                      onClick={() => handleDelete(fish.fish_type_id)}
-                    >
-                      Hapus
-                    </button>
+              {filteredFishTypes.length > 0 ? (
+                filteredFishTypes.map((fish) => (
+                  <tr key={fish.fish_type_id} className="hover:bg-gray-50">
+                    <td className="px-4 py-2">{fish.name}</td>
+                    <td className="px-4 py-2">{fish.description}</td>
+                    <td className="px-4 py-2">{fish.habitat}</td>
+                    <td className="border-b px-4 py-5">
+                      <button
+                        className="ml-4 text-blue-500"
+                        onClick={() => router.push(`/editspesiesikan/${fish.fish_type_id}`)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="ml-4 text-green-500"
+                        onClick={() => router.push(`/spesiesikandetail/${fish.fish_type_id}`)}
+                      >
+                        Detail
+                      </button>
+                      <button
+                        className="ml-4 text-red-500"
+                        onClick={() => handleDelete(fish.fish_type_id)}
+                      >
+                        Hapus
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4} className="text-center py-4 text-gray-600">
+                    Tidak ada spesies ikan yang ditemukan.
                   </td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         )}

@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { FishType } from "@/types/fish";
 
 const SpesiesIkanDetailPage = () => {
   const { id } = useParams(); // Ambil ID dari URL
+  const router = useRouter(); // Hook untuk navigasi
   const [fish, setFish] = useState<FishType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -37,7 +38,7 @@ const SpesiesIkanDetailPage = () => {
     <DefaultLayout>
       <Breadcrumb pageName="Detail Spesies Ikan" />
 
-      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md relative">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Detail Spesies Ikan</h2>
 
         {fish ? (
@@ -56,6 +57,14 @@ const SpesiesIkanDetailPage = () => {
         ) : (
           <p className="text-gray-500">Data tidak ditemukan.</p>
         )}
+
+        {/* Tombol Kembali */}
+        <button
+          onClick={() => router.push("/spesiesikan")}
+          className="absolute bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition"
+        >
+          Kembali
+        </button>
       </div>
     </DefaultLayout>
   );

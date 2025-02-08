@@ -6,8 +6,10 @@ import { Vendor } from "@/types/vendor";
 
 const TableVendor = () => {
   const [vendors, setVendors] = useState<Vendor[]>([]);
+  const [filteredVendors, setFilteredVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [search, setSearch] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -19,6 +21,7 @@ const TableVendor = () => {
         }
         const data = await response.json();
         setVendors(data);
+        setFilteredVendors(data);
       } catch (err) {
         setError("Terjadi kesalahan saat mengambil data vendor.");
       } finally {
@@ -42,17 +45,36 @@ const TableVendor = () => {
         throw new Error("Gagal menghapus data vendor");
       }
 
-      setVendors(vendors.filter((vendor) => vendor.vendor_id !== id));
+      const updatedVendors = vendors.filter((vendor) => vendor.vendor_id !== id);
+      setVendors(updatedVendors);
+      setFilteredVendors(updatedVendors);
     } catch (error) {
       console.error("Error deleting vendor:", error);
     }
   };
 
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.toLowerCase();
+    setSearch(value);
+    const filtered = vendors.filter((vendor) =>
+      vendor.vendor_name.toLowerCase().includes(value)
+    );
+    setFilteredVendors(filtered);
+  };
+
   return (
     <div className="p-6 bg-white shadow-md rounded-lg">
       <div className="flex justify-between mb-4">
-        <h2 className="text-lg font-semibold">Daftar Vendor</h2>
+        {/* Input Pencarian */}
+        <input
+          type="text"
+          placeholder="Cari nama vendor..."
+          value={search}
+          onChange={handleSearch}
+          className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
       </div>
+
       <div className="overflow-x-auto">
         {loading ? (
           <p className="text-gray-600">Memuat data...</p>
@@ -69,7 +91,7 @@ const TableVendor = () => {
               </tr>
             </thead>
             <tbody>
-              {vendors.map((vendor) => (
+              {filteredVendors.map((vendor) => (
                 <tr key={vendor.vendor_id} className="hover:bg-gray-50">
                   <td className="px-4 py-2">{vendor.vendor_name}</td>
                   <td className="px-4 py-2">{vendor.vendor_address}</td>
@@ -90,6 +112,13 @@ const TableVendor = () => {
                   </td>
                 </tr>
               ))}
+              {filteredVendors.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="text-center py-4 text-gray-500">
+                    Tidak ada data yang ditemukan.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         )}

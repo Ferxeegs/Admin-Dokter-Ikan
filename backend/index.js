@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import session from "express-session";
 import dotenv from "dotenv";
-// import db from "./config/Database.js";  // Pastikan ini sesuai dengan konfigurasi database
+import db from "./config/Database.js";  // Pastikan ini sesuai dengan konfigurasi database
 import UserRoute from "./routes/UserRoute.js";
 import FishTypes from "./routes/FishTypeRoute.js";
 import FishExperts from "./routes/FishExpertRoute.js";
@@ -33,7 +33,7 @@ app.use(session({
 // Konfigurasi CORS
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3001'  // Sesuaikan dengan frontend kamu
+    origin: 'http://localhost:3000'  // Sesuaikan dengan frontend kamu
 }));
 
 app.use(express.json());

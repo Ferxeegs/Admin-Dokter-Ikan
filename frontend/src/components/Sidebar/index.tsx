@@ -26,7 +26,7 @@ const menuGroups = [
           />
         ),
         label: "Dashboard",
-        route: "/",
+        route: "/dashboard",
       },
       {
         icon: (
@@ -68,8 +68,8 @@ const menuGroups = [
         icon: (
           <img
             className="fill-current"
-            src="/images/icon/transaksi.svg"
-            alt="Transaksi Icon"
+            src="/images/icon/SpesiesIkan.png"
+            alt="Spesies Ikan Icon"
             width={30}
           />
         ),
@@ -80,8 +80,8 @@ const menuGroups = [
         icon: (
           <img
             className="fill-current"
-            src="/images/icon/transaksi.svg"
-            alt="Transaksi Icon"
+            src="/images/icon/Obat.png"
+            alt="Obat Icon"
             width={30}
           />
         ),
@@ -92,8 +92,8 @@ const menuGroups = [
         icon: (
           <img
             className="fill-current"
-            src="/images/icon/transaksi.svg"
-            alt="Transaksi Icon"
+            src="/images/icon/VendorObat.png"
+            alt="Vendor Obat Icon"
             width={30}
           />
         ),
@@ -104,13 +104,13 @@ const menuGroups = [
         icon: (
           <img
             className="fill-current"
-            src="/images/icon/settings.svg"
-            alt="Settings Icon"
+            src="/images/icon/Profil.png"
+            alt="Profil Icon"
             width={30}
           />
         ),
-        label: "Settings",
-        route: "/settings",
+        label: "Profil",
+        route: "/profil",
       },
     ],
   },
