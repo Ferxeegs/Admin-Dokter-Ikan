@@ -57,7 +57,7 @@ const AddObat = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, price: Number(formData.price), vendor_id: Number(formData.vendor_id) }),
       });
-      
+
       if (!response.ok) {
         throw new Error("Gagal menambahkan obat.");
       }
@@ -72,25 +72,38 @@ const AddObat = () => {
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Tambah Obat" />
-      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Tambah Obat</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input type="text" name="medicine_name" value={formData.medicine_name} onChange={handleChange} placeholder="Nama Obat" className="w-full p-2 border rounded" required />
-          <input type="text" name="contain" value={formData.contain} onChange={handleChange} placeholder="Kandungan" className="w-full p-2 border rounded" required />
-          <input type="text" name="dosage" value={formData.dosage} onChange={handleChange} placeholder="Dosis" className="w-full p-2 border rounded" required />
-          <input type="number" name="price" value={formData.price} onChange={handleChange} placeholder="Harga" className="w-full p-2 border rounded" required />
-          <input type="number" name="stock" value={formData.stock} onChange={handleChange} placeholder="Stok" className="w-full p-2 border rounded" required />
-          <select name="vendor_id" value={formData.vendor_id} onChange={handleChange} className="w-full p-2 border rounded" required>
-            <option value="">Pilih Vendor</option>
-            {vendors.map((vendor) => (
-              <option key={vendor.vendor_id} value={vendor.vendor_id}>{vendor.vendor_name}</option>
-            ))}
-          </select>
-          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600" disabled={loading}>
-            {loading ? "Menambahkan..." : "Tambah Obat"}
-          </button>
-        </form>
+      
+      {/* Wrapper untuk form dan tombol kembali */}
+      <div className="relative max-w-xl mx-auto">
+        {/* Card Form */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold text-gray-700 mb-4">Tambah Obat</h2>
+          {error && <p className="text-red-500">{error}</p>}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input type="text" name="medicine_name" value={formData.medicine_name} onChange={handleChange} placeholder="Nama Obat" className="w-full p-2 border rounded" required />
+            <input type="text" name="contain" value={formData.contain} onChange={handleChange} placeholder="Kandungan" className="w-full p-2 border rounded" required />
+            <input type="text" name="dosage" value={formData.dosage} onChange={handleChange} placeholder="Dosis" className="w-full p-2 border rounded" required />
+            <input type="number" name="price" value={formData.price} onChange={handleChange} placeholder="Harga" className="w-full p-2 border rounded" required />
+            <input type="number" name="stock" value={formData.stock} onChange={handleChange} placeholder="Stok" className="w-full p-2 border rounded" required />
+            <select name="vendor_id" value={formData.vendor_id} onChange={handleChange} className="w-full p-2 border rounded" required>
+              <option value="">Pilih Vendor</option>
+              {vendors.map((vendor) => (
+                <option key={vendor.vendor_id} value={vendor.vendor_id}>{vendor.vendor_name}</option>
+              ))}
+            </select>
+            <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600" disabled={loading}>
+              {loading ? "Menambahkan..." : "Tambah Obat"}
+            </button>
+          </form>
+        </div>
+
+        {/* Tombol Kembali di kanan bawah dan di luar card */}
+        <button
+          onClick={() => router.push("/obat")}
+          className="absolute -bottom-16 right-0 bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition duration-200"
+        >
+          Kembali
+        </button>
       </div>
     </DefaultLayout>
   );

@@ -60,7 +60,6 @@ const EditSpesiesPage = ({ params }: { params: { id: string } }) => {
         throw new Error("Gagal memperbarui data spesies ikan.");
       }
 
-      // Jika sukses, kembali ke halaman detail spesies ikan
       router.push(`/spesiesikan`);
     } catch (err) {
       setError("Terjadi kesalahan. Coba lagi.");
@@ -126,6 +125,16 @@ const EditSpesiesPage = ({ params }: { params: { id: string } }) => {
             {loading ? "Memperbarui..." : "Update Spesies Ikan"}
           </button>
         </form>
+      </div>
+
+      {/* Tombol Kembali di luar Card */}
+      <div className="max-w-xl mx-auto flex justify-end mt-4">
+        <button
+          onClick={() => router.push(`/spesiesikan`)}
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200"
+        >
+          Kembali
+        </button>
       </div>
     </DefaultLayout>
   );

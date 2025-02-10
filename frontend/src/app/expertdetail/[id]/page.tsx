@@ -27,14 +27,14 @@ const FishExpertDetailPage = ({ params }: { params: { id: string } }) => {
   }, [id]);
 
   if (!expert) {
-    return <div>Loading...</div>;
+    return <div className="text-gray-500 text-center">Memuat data...</div>;
   }
 
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Detail Fish Expert" />
 
-      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md relative">
+      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Detail Fish Expert</h2>
 
         <div>
@@ -45,11 +45,13 @@ const FishExpertDetailPage = ({ params }: { params: { id: string } }) => {
           <p><strong>Pengalaman:</strong> {expert.experience}</p>
           <p><strong>Role:</strong> {expert.role}</p>
         </div>
+      </div>
 
-        {/* Tombol Kembali di kanan bawah */}
+      {/* Tombol Kembali di luar Card */}
+      <div className="max-w-xl mx-auto flex justify-end mt-4">
         <button
           onClick={() => router.push("/akun")}
-          className="absolute bottom-4 right-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-200"
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200"
         >
           Kembali
         </button>

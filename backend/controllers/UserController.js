@@ -153,39 +153,26 @@ export const deleteUser = async (req, res) => {
 
 export const getMe = async (req, res) => {
   try {
-    const { id: userId, role } = req.user; // Ambil ID dan role dari token
+    const { id: userId } = req.user; // Ambil ID dari token
     console.log('User ID from token:', userId);
-    console.log('Role from token:', role);
 
-    if (role === 'expert') {
-      // Jika role adalah 'expert', cari di tabel FishExperts
-      console.log('Role is expert, looking in fishexperts...');
-      const fishExpert = await FishExperts.findByPk(userId); // Mencari di tabel FishExperts
-      if (!fishExpert) {
-        return res.status(404).json({ message: 'Expert tidak ditemukan di fishexperts' });
-      }
-      return res.status(200).json({
-        id: fishExpert.fishExperts_id,
-        name: fishExpert.name,
-        email: fishExpert.email,
-        role: 'expert',
-      });
-    }
-
-    // Jika role adalah 'user', cari di tabel Users
+    // Cari pengguna di tabel Users
     const user = await User.findByPk(userId);
     if (!user) {
-      return res.status(404).json({ message: 'Pengguna tidak ditemukan di users' });
+      return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
     }
+
     return res.status(200).json({
       id: user.user_id,
       name: user.name,
       email: user.email,
-      role: 'user',
+      address: user.address,
+      role: user.role, // Role tetap ada jika dibutuhkan
     });
   } catch (error) {
     console.error('Error in getMe:', error);
     res.status(500).json({ message: 'Gagal mengambil data pengguna', error: error.message });
   }
 };
+
 

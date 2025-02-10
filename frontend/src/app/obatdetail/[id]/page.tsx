@@ -48,33 +48,37 @@ const ObatDetailPage = () => {
     <DefaultLayout>
       <Breadcrumb pageName="Detail Obat" />
 
-      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md relative">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Detail Obat</h2>
+      {/* Wrapper untuk form dan tombol kembali */}
+      <div className="relative max-w-xl mx-auto">
+        {/* Card Detail */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold text-gray-700 mb-4">Detail Obat</h2>
 
-        {medicine ? (
-          <div>
-            <p><strong>Nama:</strong> {medicine.medicine_name}</p>
-            <p><strong>Kandungan:</strong> {medicine.contain}</p>
-            <p><strong>Dosis:</strong> {medicine.dosage}</p>
-            <p><strong>Harga:</strong> Rp {medicine.price.toLocaleString()}</p>
-            <p><strong>Stok:</strong> {medicine.stock.toLocaleString()}</p>
-            <p><strong>Vendor:</strong> {vendorName}</p>
-            {medicine.medicine_image && (
-              <img
-                src={medicine.medicine_image}
-                alt={medicine.medicine_name}
-                className="mt-4 rounded w-full h-auto"
-              />
-            )}
-          </div>
-        ) : (
-          <p className="text-gray-500">Data tidak ditemukan.</p>
-        )}
+          {medicine ? (
+            <div>
+              <p><strong>Nama:</strong> {medicine.medicine_name}</p>
+              <p><strong>Kandungan:</strong> {medicine.contain}</p>
+              <p><strong>Dosis:</strong> {medicine.dosage}</p>
+              <p><strong>Harga:</strong> Rp {medicine.price.toLocaleString()}</p>
+              <p><strong>Stok:</strong> {medicine.stock.toLocaleString()}</p>
+              <p><strong>Vendor:</strong> {vendorName}</p>
+              {medicine.medicine_image && (
+                <img
+                  src={medicine.medicine_image}
+                  alt={medicine.medicine_name}
+                  className="mt-4 rounded w-full h-auto"
+                />
+              )}
+            </div>
+          ) : (
+            <p className="text-gray-500">Data tidak ditemukan.</p>
+          )}
+        </div>
 
-        {/* Tombol Kembali */}
+        {/* Tombol Kembali di kanan bawah dan di luar card */}
         <button
           onClick={() => router.push("/obat")}
-          className="absolute bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition"
+          className="absolute -bottom-16 right-0 bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition duration-200"
         >
           Kembali
         </button>

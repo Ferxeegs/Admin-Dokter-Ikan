@@ -147,6 +147,16 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
           </button>
         </form>
       </div>
+
+      {/* Tombol Kembali di luar Card */}
+      <div className="max-w-xl mx-auto flex justify-end mt-4">
+        <button
+          onClick={() => router.push(`/expertdetail/${id}`)}
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200"
+        >
+          Kembali
+        </button>
+      </div>
     </DefaultLayout>
   );
 };

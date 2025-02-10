@@ -38,7 +38,7 @@ const SpesiesIkanDetailPage = () => {
     <DefaultLayout>
       <Breadcrumb pageName="Detail Spesies Ikan" />
 
-      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md relative">
+      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Detail Spesies Ikan</h2>
 
         {fish ? (
@@ -57,11 +57,13 @@ const SpesiesIkanDetailPage = () => {
         ) : (
           <p className="text-gray-500">Data tidak ditemukan.</p>
         )}
+      </div>
 
-        {/* Tombol Kembali */}
+      {/* Tombol Kembali di luar Card */}
+      <div className="max-w-xl mx-auto flex justify-end mt-4">
         <button
           onClick={() => router.push("/spesiesikan")}
-          className="absolute bottom-4 right-4 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition"
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200"
         >
           Kembali
         </button>

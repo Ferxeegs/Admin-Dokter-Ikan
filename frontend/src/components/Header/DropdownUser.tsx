@@ -1,21 +1,19 @@
 'use client'
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import ClickOutside from "@/components/ClickOutside";
 import React from "react";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
 
 const LogoutButton: React.FC = () => {
-  const router = useRouter(); // Inisialisasi router
+  const router = useRouter();
 
   const handleLogout = () => {
-    // Hapus token dari localStorage atau sessionStorage
-    localStorage.removeItem("token"); // Jika token disimpan di localStorage
-
-    // Redirect pengguna ke halaman login
-    router.push("/auth/signin"); // Mengarahkan pengguna ke halaman login
+    localStorage.removeItem("token");
+    router.push("/auth/signin");
   };
 
   return (
@@ -27,6 +25,23 @@ const LogoutButton: React.FC = () => {
 
 const DropdownUser: React.FC = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [adminName, setAdminName] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const decodedToken: any = jwtDecode(token);
+        setAdminName(decodedToken.name || "Admin");
+      } catch (error) {
+        console.error("Error decoding token:", error);
+      }
+    };
+
+    fetchAdminData();
+  }, []);
 
   return (
     <ClickOutside onClick={() => setDropdownOpen(false)} className="relative">
@@ -35,19 +50,21 @@ const DropdownUser: React.FC = () => {
         className="flex items-center gap-4"
         href="#"
       >
+        {/* Nama Admin */}
+        <span className="text-sm font-medium">{adminName}</span>
+
+        {/* Icon Profil */}
         <span className="h-12 w-12 rounded-full">
           <Image
             width={112}
             height={112}
             src={"/images/icon/profile.svg"}
-            style={{
-              width: "auto",
-              height: "auto",
-            }}
+            style={{ width: "auto", height: "auto" }}
             alt="User"
           />
         </span>
 
+        {/* Icon Dropdown */}
         <svg
           className="hidden fill-current sm:block"
           width="12"
@@ -65,11 +82,8 @@ const DropdownUser: React.FC = () => {
         </svg>
       </Link>
 
-      {/* Dropdown Menu */}
       {dropdownOpen && (
-        <div
-          className={`absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark`}
-        >
+        <div className="absolute right-0 mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
           <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
             <li>
               <Link

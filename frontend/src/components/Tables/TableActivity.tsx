@@ -146,9 +146,9 @@ const TableActivity = () => {
                   </td>
                   <td className="border-b px-4 py-5">
                     <span className={`inline-flex rounded-full bg-opacity-10 px-3 py-1 text-sm font-medium ${
-                      activityItem.status === "Pending"
+                      activityItem.status === "Waiting"
                         ? "bg-warning text-warning"
-                        : activityItem.status === "Selesai"
+                        : activityItem.status === "In Consultation"
                         ? "bg-success text-success"
                         : "bg-danger text-danger"
                     }`}>

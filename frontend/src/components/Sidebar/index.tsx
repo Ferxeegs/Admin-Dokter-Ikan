@@ -49,7 +49,7 @@ const menuGroups = [
             width={30}
           />
         ),
-        label: "Activity",
+        label: "Konsultasi",
         route: "/activity",
       },
       {

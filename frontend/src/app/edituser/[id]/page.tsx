@@ -21,7 +21,7 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
           const response = await fetch(`http://localhost:9001/users/${id}`);
           const userData: Akun = await response.json();
           setUser(userData);
-          setFormData(userData); // Mengatur data yang diambil ke dalam form
+          setFormData(userData);
         } catch (error) {
           console.error("Error fetching user detail:", error);
         }
@@ -60,7 +60,6 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
         throw new Error("Gagal memperbarui data user.");
       }
 
-      // Jika sukses, kembali ke halaman detail user
       router.push(`/akun`);
     } catch (err) {
       setError("Terjadi kesalahan. Coba lagi.");
@@ -139,6 +138,16 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
             {loading ? "Memperbarui..." : "Update User"}
           </button>
         </form>
+      </div>
+
+      {/* Tombol Kembali di luar Card */}
+      <div className="max-w-xl mx-auto flex justify-end mt-4">
+        <button
+          onClick={() => router.push(`/akun`)}
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200"
+        >
+          Kembali
+        </button>
       </div>
     </DefaultLayout>
   );

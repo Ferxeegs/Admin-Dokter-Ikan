@@ -1,5 +1,4 @@
 import Link from "next/link";
-import DarkModeSwitcher from "./DarkModeSwitcher";
 import DropdownUser from "./DropdownUser";
 import Image from "next/image";
 
@@ -63,16 +62,22 @@ const Header = (props: {
             />
           </Link>
         </div>
-        <Link className="text-black-2 mr-9 font-extrabold text-xl hover:text-blue-400" href="/">
-                  Dahsboard Admin Dokter Ikan
-        </Link>
+        <div className="flex justify-center">
+          <Link
+            className="text-black-2 font-extrabold text-xl hover:text-blue-400"
+            href="/"
+            >
+            Admin Dokter Ikan
+           </Link>
+        </div>
+
         
         <div className="flex items-center gap-3 2xsm:gap-8">
           <ul className="flex items-center gap-2 2xsm:gap-4">
             {/*  */}
 
             {/* <!-- Dark Mode Toggler --> */}
-            <DarkModeSwitcher />
+            {/* <DarkModeSwitcher /> */}
             {/* <!-- Dark Mode Toggler --> */}
 
             {/* <!-- Chat Notification Area --> */}

@@ -61,55 +61,80 @@ const AddSpesiesIkan = () => {
     <DefaultLayout>
       <Breadcrumb pageName="Tambah Spesies Ikan" />
 
-      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-semibold text-gray-700 mb-4">Tambah Spesies Ikan</h2>
+      {/* Wrapper untuk Form dan Tombol Kembali */}
+      <div className="relative max-w-xl mx-auto">
+        {/* Form Tambah Spesies Ikan */}
+        <div className="bg-white p-6 rounded-lg shadow-md">
+          <h2 className="text-2xl font-semibold text-gray-700 mb-4">Tambah Spesies Ikan</h2>
 
-        {error && <p className="text-red-500">{error}</p>}
+          {error && <p className="text-red-500">{error}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700">Nama Ikan</label>
-            <input
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-gray-700">Nama Ikan</label>
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block text-gray-700">Deskripsi</label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
+            <div>
+              <label className="block text-gray-700">Deskripsi</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
 
-          <div>
-            <label className="block text-gray-700">Habitat</label>
-            <input
-              type="text"
-              name="habitat"
-              value={formData.habitat}
-              onChange={handleChange}
-              className="w-full p-2 border rounded"
-              required
-            />
-          </div>
+            <div>
+              <label className="block text-gray-700">Habitat</label>
+              <input
+                type="text"
+                name="habitat"
+                value={formData.habitat}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
-            disabled={loading}
-          >
-            {loading ? "Menambahkan..." : "Tambah Spesies Ikan"}
-          </button>
-        </form>
+            {/* Field Gambar (Opsional) */}
+            <div>
+              <label className="block text-gray-700">URL Gambar (Opsional)</label>
+              <input
+                type="text"
+                name="image"
+                value={formData.image}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+              />
+            </div>
+
+            {/* Tombol Submit */}
+            <button
+              type="submit"
+              className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200"
+              disabled={loading}
+            >
+              {loading ? "Menambahkan..." : "Tambah Spesies Ikan"}
+            </button>
+          </form>
+        </div>
+
+        {/* Tombol Kembali di Kanan Bawah dan di Luar Card */}
+        <button
+          onClick={() => router.push("/spesiesikan")}
+          className="absolute -bottom-16 right-0 bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition duration-200"
+        >
+          Kembali
+        </button>
       </div>
     </DefaultLayout>
   );

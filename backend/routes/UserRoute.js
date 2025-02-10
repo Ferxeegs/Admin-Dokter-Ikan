@@ -21,7 +21,7 @@ router.get('/users', getAllUsers); // Mendapatkan semua pengguna (diperlukan aut
 router.get('/users/:id', getUserById); // Mendapatkan pengguna berdasarkan ID (diperlukan autentikasi)
 router.put('/users/:id', updateUser); // Memperbarui pengguna berdasarkan ID (diperlukan autentikasi)
 router.delete('/users/:id', deleteUser); // Menghapus pengguna berdasarkan ID (diperlukan autentikasi)
-router.get('/me', getMe);
+router.get('/me',authenticate, getMe);
 
 
 export default router;

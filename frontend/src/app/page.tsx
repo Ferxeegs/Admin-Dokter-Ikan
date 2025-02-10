@@ -1,19 +1,15 @@
 import { Metadata } from "next";
-// import DefaultLayout from "@/components/Layouts/DefaultLayout";
-import Dashboard from "@/components/Dashboard/Dashboard";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/app/auth/[...nextauth]/route";
 import SignIn from "./auth/signin/page";
+
 export const metadata: Metadata = {
-  title:
-    "Admin Dokter Ikan",
+  title: "Admin Dokter Ikan",
   description: "Login Admin Dokter Ikan",
 };
 
-export default function Home() {
-  return (
-    <>
-      {/* <DefaultLayout> */}
-        <SignIn />
-      {/* </DefaultLayout> */}
-    </>
-  );
+export default async function Home() {
+  // Mengambil session dari server
+  const session = await getServerSession(authOptions);
+  return <SignIn />;
 }

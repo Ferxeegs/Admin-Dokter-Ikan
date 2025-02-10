@@ -145,9 +145,19 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
             disabled={loading}
           >
-            {loading ? "Memperbarui..." : "Perbarui Obat"}
+            {loading ? "Memperbarui..." : "Update Obat"}
           </button>
         </form>
+      </div>
+
+      {/* Tombol Kembali di luar Card */}
+      <div className="max-w-xl mx-auto flex justify-end mt-4">
+        <button
+          onClick={() => router.push(`/obat`)}
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200"
+        >
+          Kembali
+        </button>
       </div>
     </DefaultLayout>
   );

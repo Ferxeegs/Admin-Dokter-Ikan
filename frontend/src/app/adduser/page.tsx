@@ -125,6 +125,16 @@ const TambahUser = () => {
           </button>
         </form>
       </div>
+
+      {/* Tombol Kembali di luar Card */}
+      <div className="max-w-xl mx-auto flex justify-end mt-4">
+        <button
+          onClick={() => router.push("/akun")}
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+        >
+          Kembali
+        </button>
+      </div>
     </DefaultLayout>
   );
 };
