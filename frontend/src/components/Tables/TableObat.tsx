@@ -10,6 +10,7 @@ const TableObat = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [popupMessage, setPopupMessage] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -44,7 +45,8 @@ const TableObat = () => {
       if (!response.ok) {
         throw new Error("Gagal menghapus data obat");
       }
-
+      setPopupMessage("Obat berhasil dihapus!");
+      setTimeout(() => setPopupMessage(""), 2000);
       const updatedMedicines = medicines.filter((medicine) => medicine.medicine_id !== id);
       setMedicines(updatedMedicines);
       setFilteredMedicines(updatedMedicines);
@@ -64,6 +66,11 @@ const TableObat = () => {
 
   return (
     <div className="p-6 bg-white shadow-md rounded-lg">
+      {popupMessage && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+          <p className="text-lg font-semibold">{popupMessage}</p>
+        </div>
+      )}
       <div className="flex justify-between mb-4">
         {/* Input Pencarian */}
         <input
@@ -125,7 +132,7 @@ const TableObat = () => {
               {filteredMedicines.length === 0 && (
                 <tr>
                   <td colSpan={6} className="text-center py-4 text-gray-500">
-                    Tidak ada data yang ditemukan.
+                    Data tidak dapat ditemukan.
                   </td>
                 </tr>
               )}

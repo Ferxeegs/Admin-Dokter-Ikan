@@ -14,6 +14,7 @@ const AddVendorObat = () => {
   });
 
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
   // Handle perubahan input
@@ -25,6 +26,7 @@ const AddVendorObat = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setSuccess(false);
     setError("");
 
     // Validasi sederhana
@@ -46,9 +48,11 @@ const AddVendorObat = () => {
       if (!response.ok) {
         throw new Error("Gagal menambahkan vendor obat.");
       }
-
-      // Jika sukses, kembali ke halaman daftar vendor
-      router.push("/vendorobat");
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        router.push("/vendorobat");
+      }, 2000);
     } catch (err) {
       setError("Terjadi kesalahan. Coba lagi.");
     } finally {
@@ -110,6 +114,11 @@ const AddVendorObat = () => {
           </button>
         </form>
       </div>
+      {success && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+          Vendor Obat berhasil ditambahkan!
+        </div>
+      )}
       {/* Tombol Kembali di luar Card */}
       <div className="max-w-xl mx-auto flex justify-end mt-4">
         <button

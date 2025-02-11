@@ -1,19 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
+import { Transaksi } from "@/types/transaksi";
 interface User {
   user_id: number;
   name: string;
   email: string;
-}
-
-interface Transaksi {
-  user_consultation_id: number;
-  name: string;
-  email: string;
-  topikKonsultasi: string;
-  status: string;
 }
 
 const TableTransaksi = () => {
@@ -28,6 +20,7 @@ const TableTransaksi = () => {
         const [usersRes, consultationsRes] = await Promise.all([
           fetch("http://localhost:9001/users"),
           fetch("http://localhost:9001/user-consultations"),
+          fetch("htpp://localhost:9001/")
         ]);
 
         if (!usersRes.ok || !consultationsRes.ok) {
@@ -86,7 +79,7 @@ const TableTransaksi = () => {
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                <th className="min-w-[220px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
+                <th className="min-w-[200px] px-4 py-4 font-medium text-black dark:text-white xl:pl-11">
                   Nama
                 </th>
                 <th className="min-w-[150px] px-4 py-4 font-medium text-black dark:text-white">
@@ -94,6 +87,15 @@ const TableTransaksi = () => {
                 </th>
                 <th className="min-w-[180px] px-4 py-4 font-medium text-black dark:text-white">
                   Topik Konsultasi
+                </th>
+                <th className="min-w-[130px] px-4 py-4 font-medium text-black dark:text-white">
+                  Obat
+                </th>
+                <th className="px-4 py-4 font-medium text-black dark:text-white">
+                  Status Chat
+                </th>
+                <th className="min-w-[100px] px-4 py-4 font-medium text-black dark:text-white">
+                  Total
                 </th>
                 <th className="px-4 py-4 font-medium text-black dark:text-white">
                   Status
@@ -114,6 +116,27 @@ const TableTransaksi = () => {
                       <p className="text-black dark:text-white">{item.topikKonsultasi}</p>
                     </td>
                     <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        <div>
+                          Lihat Obat
+                        </div>
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                      <div>
+                          Aktif
+                        </div>
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
+                      <p className="text-black dark:text-white">
+                        <div>
+                          Rp. (Total)
+                        </div>
+                      </p>
+                    </td>
+                    <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                       <span
                         className={`px-3 py-1 rounded-lg text-white ${
                           item.status === "Pending" ? "bg-yellow-500" : "bg-green-500"
@@ -127,7 +150,7 @@ const TableTransaksi = () => {
               ) : (
                 <tr>
                   <td colSpan={4} className="text-center py-5 text-gray-500">
-                    User tidak ditemukan.
+                    Data tidak dapat ditemukan.
                   </td>
                 </tr>
               )}

@@ -10,7 +10,7 @@ const SpesiesIkan = () => {
 
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Tabel Spesies Ikan" />
+      <Breadcrumb pageName="Daftar Spesies Ikan" />
 
       <div className="flex justify-end mt-5 space-x-4 mb-4">
         <button

@@ -18,6 +18,7 @@ const AddObat = () => {
   });
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -43,6 +44,7 @@ const AddObat = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setSuccess(false);
     setError("");
 
     if (!formData.medicine_name || !formData.contain || !formData.dosage || !formData.price || !formData.vendor_id) {
@@ -61,7 +63,11 @@ const AddObat = () => {
       if (!response.ok) {
         throw new Error("Gagal menambahkan obat.");
       }
-      router.push("/obat");
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        router.push("/obat");
+      }, 2000);
     } catch (err) {
       setError("Terjadi kesalahan. Coba lagi.");
     } finally {
@@ -96,7 +102,11 @@ const AddObat = () => {
             </button>
           </form>
         </div>
-
+          {success && (
+              <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+                Obat berhasil ditambahkan!
+              </div>
+          )}
         {/* Tombol Kembali di kanan bawah dan di luar card */}
         <button
           onClick={() => router.push("/obat")}

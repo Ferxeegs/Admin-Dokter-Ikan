@@ -16,6 +16,7 @@ const AddSpesiesIkan = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   // Handle perubahan input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -27,6 +28,7 @@ const AddSpesiesIkan = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess(false);
 
     // Validasi sederhana
     if (!formData.name || !formData.description || !formData.habitat) {
@@ -47,9 +49,11 @@ const AddSpesiesIkan = () => {
       if (!response.ok) {
         throw new Error("Gagal menambahkan spesies ikan.");
       }
-
-      // Jika sukses, kembali ke halaman daftar spesies ikan
-      router.push("/spesiesikan");
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        router.push("/spesiesikan");
+      }, 2000);
     } catch (err) {
       setError("Terjadi kesalahan. Coba lagi.");
     } finally {
@@ -104,7 +108,11 @@ const AddSpesiesIkan = () => {
                 required
               />
             </div>
-
+            {success && (
+              <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+                Spesies Ikan berhasil ditambahkan!
+              </div>
+            )}
             {/* Field Gambar (Opsional) */}
             <div>
               <label className="block text-gray-700">URL Gambar (Opsional)</label>

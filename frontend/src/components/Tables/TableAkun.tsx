@@ -10,6 +10,7 @@ const TableAkun = () => {
   const [fishExperts, setFishExperts] = useState<FishExpert[]>([]);
   const [searchUser, setSearchUser] = useState("");
   const [searchExpert, setSearchExpert] = useState("");
+  const [popupMessage, setPopupMessage] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -32,26 +33,41 @@ const TableAkun = () => {
 
   const handleDelete = async (id: number, type: "user" | "expert") => {
     const endpoint = type === "user" ? `users/${id}` : `fishexperts/${id}`;
-    if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
-      try {
+    
+    // Menampilkan layar konfirmasi
+    const userConfirmed = window.confirm("Apakah Anda yakin ingin menghapus data ini?");
+    if (!userConfirmed) {
+        router.push("/akun");
+        return;
+    }
+    
+    try {
         const response = await fetch(`http://localhost:9001/${endpoint}`, {
-          method: "DELETE",
+            method: "DELETE",
         });
 
         if (!response.ok) {
-          throw new Error("Gagal menghapus data");
+            throw new Error("Gagal menghapus data");
         }
 
         fetchData();
-      } catch (error) {
+        setPopupMessage("Data berhasil dihapus!");
+        setTimeout(() => setPopupMessage(""), 2000);
+    } catch (error) {
         console.error("Error deleting data:", error);
-      }
     }
-  };
+};
+
 
   return (
     <div className="flex flex-col gap-10">
       {/* Tabel User */}
+      {popupMessage && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+          <p className="text-lg font-semibold">{popupMessage}</p>
+        </div>
+      )}
+
       <div className="rounded-lg border border-stroke bg-white p-5 shadow-md dark:border-strokedark dark:bg-boxdark">
         <h2 className="text-lg font-semibold text-black dark:text-white mb-4">Daftar User</h2>
         <input
@@ -90,6 +106,11 @@ const TableAkun = () => {
       </div>
 
       {/* Tabel Expert */}
+      {popupMessage && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+          <p className="text-lg font-semibold">{popupMessage}</p>
+        </div>
+      )}
       <div className="rounded-lg border border-stroke bg-white p-5 shadow-md dark:border-strokedark dark:bg-boxdark">
         <h2 className="text-lg font-semibold text-black dark:text-white mb-4">Daftar Expert</h2>
         <input

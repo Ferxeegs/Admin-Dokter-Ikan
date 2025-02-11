@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 
 export const metadata: Metadata = {
-  title: "Transaksi",
+  title: "Pembayaran",
   description:
     "Tabel Pembayaran",
 };
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 const Transaksi = () => {
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Tabel Pembayaran" />
+      <Breadcrumb pageName="Daftar Pembayaran" />
 
       <div className="flex flex-col gap-10">
         <TableTransaksi />

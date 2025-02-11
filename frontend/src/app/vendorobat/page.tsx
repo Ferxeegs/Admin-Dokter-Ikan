@@ -10,7 +10,7 @@ const VendorObat = () => {
 
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Tabel Vendor Obat" />
+      <Breadcrumb pageName="Daftar Vendor Obat" />
 
       <div className="flex justify-end mt-5 space-x-4 mb-4">
         <button

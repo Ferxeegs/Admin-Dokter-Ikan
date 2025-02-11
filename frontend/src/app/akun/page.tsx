@@ -11,7 +11,7 @@ const Akun = () => {
   
   return (
     <DefaultLayout>
-      <Breadcrumb pageName="Tabel Akun" />
+      <Breadcrumb pageName="Daftar Akun" />
 
       <div className="flex justify-end mt-5 space-x-4 mb-4">
         <button

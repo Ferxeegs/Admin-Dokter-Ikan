@@ -16,19 +16,18 @@ const TambahUser = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
-  // Handle perubahan input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle submit form
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess(false);
 
-    // Validasi sederhana
     if (!formData.name || !formData.email || !formData.password) {
       setError("Semua field harus diisi.");
       setLoading(false);
@@ -48,8 +47,11 @@ const TambahUser = () => {
         throw new Error("Gagal menambahkan user.");
       }
 
-      // Jika sukses, kembali ke halaman daftar akun
-      router.push("/akun");
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        router.push("/akun");
+      }, 2000);
     } catch (err) {
       setError("Terjadi kesalahan. Coba lagi.");
     } finally {
@@ -61,7 +63,7 @@ const TambahUser = () => {
     <DefaultLayout>
       <Breadcrumb pageName="Tambah User" />
 
-      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md">
+      <div className="max-w-xl mx-auto bg-white p-6 rounded-lg shadow-md relative">
         <h2 className="text-2xl font-semibold text-gray-700 mb-4">Tambah User</h2>
 
         {error && <p className="text-red-500">{error}</p>}
@@ -126,7 +128,12 @@ const TambahUser = () => {
         </form>
       </div>
 
-      {/* Tombol Kembali di luar Card */}
+      {success && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+          User berhasil ditambahkan!
+        </div>
+      )}
+
       <div className="max-w-xl mx-auto flex justify-end mt-4">
         <button
           onClick={() => router.push("/akun")}

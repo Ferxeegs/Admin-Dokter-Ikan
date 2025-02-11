@@ -46,7 +46,11 @@ const Dashboard = () => {
         </CardDataStats>
 
         <CardDataStats title="Total Konsultasi" total={totalConsultations}>
-          <Image width={22} height={12} src={"/images/icon/total-views.svg"} alt="Total Consultations" />
+          <Image width={22} height={12} src={"/images/icon/TotalKonsultasi.png"} alt="Total Consultations" />
+        </CardDataStats>
+        
+        <CardDataStats title="Total View" total={totalConsultations}>
+          <Image width={22} height={12} src={"/images/icon/total-views.svg"} alt="Total Views" />
         </CardDataStats>
       </div>
 

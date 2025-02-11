@@ -10,6 +10,7 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
   const [expert, setExpert] = useState<FishExpert | null>(null);
   const [formData, setFormData] = useState<FishExpert | null>(null);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
   const { id } = params;
@@ -39,6 +40,7 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setSuccess(false);
     setError("");
 
     if (formData) {
@@ -54,8 +56,11 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
         if (!response.ok) {
           throw new Error("Gagal mengupdate data.");
         }
-
-        router.push(`/expertdetail/${id}`);
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+          router.push("/akun");
+        }, 2000);
       } catch (error) {
         setError("Terjadi kesalahan. Coba lagi.");
       } finally {
@@ -147,7 +152,11 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
           </button>
         </form>
       </div>
-
+      {success && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+          User berhasil diperbarui!
+        </div>
+      )}
       {/* Tombol Kembali di luar Card */}
       <div className="max-w-xl mx-auto flex justify-end mt-4">
         <button

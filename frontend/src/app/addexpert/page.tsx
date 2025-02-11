@@ -19,6 +19,7 @@ const AddExpert = () => {
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,6 +29,7 @@ const AddExpert = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    setSuccess(false);
 
     if (!formData.name || !formData.email || !formData.password || !formData.phone_number || !formData.specialization || !formData.experience) {
       setError("Semua field harus diisi.");
@@ -47,8 +49,11 @@ const AddExpert = () => {
       if (!response.ok) {
         throw new Error("Gagal menambahkan expert.");
       }
-
-      router.push("/akun");
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        router.push("/akun");
+      }, 2000);
     } catch (err) {
       setError("Terjadi kesalahan. Coba lagi.");
     } finally {
@@ -146,6 +151,12 @@ const AddExpert = () => {
           </button>
         </form>
       </div>
+      {success && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+          Expert berhasil ditambahkan!
+        </div>
+      )}
+      
 
       {/* Tombol Kembali di luar Card */}
       <div className="max-w-xl mx-auto flex justify-end mt-4">

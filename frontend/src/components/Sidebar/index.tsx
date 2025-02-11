@@ -20,7 +20,7 @@ const menuGroups = [
         icon: (
           <img
             className="fill-current"
-            src="/images/icon/dashboard.svg"
+            src="/images/icon/Dashboard.png"
             alt="Dashboard Icon"
             width={30}
           />
@@ -44,7 +44,7 @@ const menuGroups = [
         icon: (
           <img
             className="fill-current"
-            src="/images/icon/activity.svg"
+            src="/images/icon/Konsultasi.png"
             alt="Activity Icon"
             width={30}
           />
@@ -61,7 +61,7 @@ const menuGroups = [
             width={30}
           />
         ),
-        label: "Transaksi",
+        label: "Pembayaran",
         route: "/transaksi",
       },
       {
@@ -130,7 +130,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       >
         {/* <!-- SIDEBAR HEADER --> */}
         <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-          <Link href="/" className="flex items-center gap-2">
+          <Link href="/dashboard" className="flex items-center gap-2">
             <Image
               width={80}
               height={12}

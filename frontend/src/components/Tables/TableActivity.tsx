@@ -159,7 +159,7 @@ const TableActivity = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="text-center py-5">User yang dicari tidak ditemukan.</td>
+                <td colSpan={5} className="text-center py-5">Data tidak dapat ditemukan.</td>
               </tr>
             )}
           </tbody>

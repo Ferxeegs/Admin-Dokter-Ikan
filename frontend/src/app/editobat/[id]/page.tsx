@@ -10,6 +10,7 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
   const [medicine, setMedicine] = useState<Medicine | null>(null);
   const [formData, setFormData] = useState<Medicine | null>(null);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
   const { id } = params;
@@ -39,6 +40,7 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setSuccess(false);
     setError("");
 
     if (!formData?.medicine_name || !formData?.contain || !formData?.dosage || !formData?.price) {
@@ -59,8 +61,11 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
       if (!response.ok) {
         throw new Error("Gagal memperbarui data obat.");
       }
-
-      router.push(`/obat`);
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        router.push("/obat");
+      }, 2000);
     } catch (err) {
       setError("Terjadi kesalahan. Coba lagi.");
     } finally {
@@ -149,7 +154,11 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
           </button>
         </form>
       </div>
-
+      {success && (
+        <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+          Obat berhasil diperbarui!
+        </div>
+      )}
       {/* Tombol Kembali di luar Card */}
       <div className="max-w-xl mx-auto flex justify-end mt-4">
         <button
