@@ -15,8 +15,9 @@ const TableVendor = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
       try {
-        const response = await fetch("http://localhost:9001/vendors");
+        const response = await fetch(`${API_BASE_URL}/vendors`);
         if (!response.ok) {
           throw new Error("Gagal mengambil data vendor");
         }
@@ -34,11 +35,12 @@ const TableVendor = () => {
   }, []);
 
   const handleDelete = async (id: number) => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const confirmDelete = confirm("Apakah Anda yakin ingin menghapus vendor ini?");
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:9001/vendors/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/vendors/${id}`, {
         method: "DELETE",
       });
 

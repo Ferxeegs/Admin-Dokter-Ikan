@@ -3,40 +3,90 @@ import User from "../models/UserModel.js";
 import FishExperts from "../models/FishExpertsModel.js";
 import jwt from 'jsonwebtoken';
 
+
+export const createUser = async (req, res) => {
+  try {
+    const { name, email, password, address, role } = req.body;
+
+    console.log("Registrasi attempt:", email);
+
+    // Cek apakah email sudah terdaftar
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      console.log("Registrasi gagal: Email sudah terdaftar");
+      return res.status(400).json({ message: "Email sudah terdaftar" });
+    }
+
+    // Enkripsi password menggunakan bcrypt
+    const hashedPassword = await bcrypt.hash(password.trim(), 10); // 10 adalah salt rounds
+    console.log("Plain Password:", password);
+    console.log("Hashed Password:", hashedPassword);
+
+    // Jika email belum terdaftar, buat pengguna baru
+    const newUser = await User.create({
+      name,
+      email,
+      password: hashedPassword, // Menyimpan password yang sudah di-hash
+      address,
+      role,
+    });
+
+    console.log("Registrasi berhasil:", email);
+
+    res.status(201).json({ message: "Pengguna berhasil ditambahkan", newUser });
+  } catch (error) {
+    console.error("Registrasi error:", error);
+    res.status(500).json({ message: "Gagal menambahkan pengguna", error: error.message });
+  }
+};
 // Fungsi login pengguna
 export const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Mencari pengguna di tabel User
+    console.log("Login attempt:", email);
+
+    // Cari pengguna berdasarkan email
     const user = await User.findOne({ where: { email } });
+
+    console.log("User found:", user ? "Yes" : "No");
 
     // Jika pengguna tidak ditemukan
     if (!user) {
-      return res.status(404).json({ message: 'Email atau password salah' });
+      console.log("Login gagal: Email tidak ditemukan");
+      return res.status(404).json({ message: "Email atau password salah" });
     }
 
     // Periksa apakah role pengguna adalah admin
-    if (user.role.toLowerCase() !== 'admin') {
-      return res.status(403).json({ message: 'Hanya admin yang diizinkan untuk login' });
+    if (user.role.toLowerCase() !== "admin") {
+      console.log("Login gagal: Bukan admin");
+      return res.status(403).json({ message: "Hanya admin yang diizinkan untuk login" });
     }
 
     // Memverifikasi apakah password cocok
-    const isMatch = await bcrypt.compare(password, user.password);
+    console.log("Received Password:", password);
+    console.log("Stored Hashed Password:", user.password);
+
+    const isMatch = await bcrypt.compare(password.trim(), user.password);
+    console.log("Password match:", isMatch ? "Yes" : "No");
+
     if (!isMatch) {
-      return res.status(400).json({ message: 'Email atau password salah' });
+      console.log("Login gagal: Password salah");
+      return res.status(400).json({ message: "Email atau password salah" });
     }
 
     // Membuat token JWT
     const token = jwt.sign(
       { id: user.user_id, name: user.name, email: user.email, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: '1h' }
+      { expiresIn: "1h" }
     );
+
+    console.log("Login berhasil:", email);
 
     // Mengirimkan respons sukses dengan token
     res.status(200).json({
-      message: 'Login berhasil',
+      message: "Login berhasil",
       token,
       user: {
         id: user.user_id,
@@ -46,8 +96,8 @@ export const loginUser = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Terjadi kesalahan saat login', error: error.message });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Terjadi kesalahan saat login", error: error.message });
   }
 };
 
@@ -77,38 +127,7 @@ export const getUserById = async (req, res) => {
 
 
 // Fungsi untuk menambahkan pengguna baru
-export const createUser = async (req, res) => {
-  try {
-    const { name, email, password, address, role } = req.body;
 
-    // Cek apakah email sudah terdaftar
-    const existingUser = await User.findOne({ where: { email } });
-    
-    if (existingUser) {
-      // Jika email sudah terdaftar, kirimkan pesan error
-      return res.status(400).json({ message: 'Email sudah terdaftar' });
-    }
-
-    // Enkripsi password menggunakan bcrypt
-    const hashedPassword = await bcrypt.hash(password, 10); // 10 adalah jumlah salt rounds
-
-    // Jika email belum terdaftar, lanjutkan untuk membuat pengguna baru
-    const newUser = await User.create({ 
-      name, 
-      email, 
-      password: hashedPassword, // Menyimpan password yang terenkripsi
-      address, 
-      role 
-    });
-
-    // Kirimkan respons sukses jika berhasil membuat pengguna baru
-    res.status(201).json({ message: 'Pengguna berhasil ditambahkan', newUser });
-  } catch (error) {
-    // Tangani error lain
-    console.error(error);
-    res.status(500).json({ message: 'Gagal menambahkan pengguna', error: error.message });
-  }
-};
 
 // Fungsi untuk memperbarui data pengguna
 export const updateUser = async (req, res) => {

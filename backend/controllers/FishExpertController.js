@@ -27,7 +27,7 @@ export const getFishExpertById = async (req, res) => {
 // Menambahkan Fish Expert baru
 export const createFishExpert = async (req, res) => {
   try {
-    const { name, email, password, phone_number, specialization, experience } = req.body;
+    const { name, email, password, phone_number, specialization, experience, image_url} = req.body;
 
     // Cek apakah email sudah terdaftar
     const existingExpert = await FishExperts.findOne({ where: { email } });
@@ -46,6 +46,7 @@ export const createFishExpert = async (req, res) => {
       phone_number,
       specialization,
       experience,
+      image_url,
     });
 
     res.status(201).json({
@@ -57,6 +58,7 @@ export const createFishExpert = async (req, res) => {
         phone_number: newExpert.phone_number,
         specialization: newExpert.specialization,
         experience: newExpert.experience,
+        image_url: newExpert.image_url,
       },
     });
   } catch (error) {
@@ -83,6 +85,7 @@ export const updateFishExpert = async (req, res) => {
       phone_number,
       specialization,
       experience,
+      image_url,
     });
 
     res.status(200).json({

@@ -16,10 +16,11 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (id) {
       const fetchExpertDetail = async () => {
         try {
-          const response = await fetch(`http://localhost:9001/fishexperts/${id}`);
+          const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`);
           const expertData: FishExpert = await response.json();
           setExpert(expertData);
           setFormData(expertData);
@@ -43,9 +44,10 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
     setSuccess(false);
     setError("");
 
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (formData) {
       try {
-        const response = await fetch(`http://localhost:9001/fishexperts/${id}`, {
+        const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -160,7 +162,7 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
       {/* Tombol Kembali di luar Card */}
       <div className="max-w-xl mx-auto flex justify-end mt-4">
         <button
-          onClick={() => router.push(`/expertdetail/${id}`)}
+          onClick={() => router.push(`/akun`)}
           className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition duration-200"
         >
           Kembali

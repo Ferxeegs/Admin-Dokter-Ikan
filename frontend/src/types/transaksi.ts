@@ -3,7 +3,7 @@ export type Transaksi = {
     email: string;
     topikKonsultasi: string;
     obat: string;
-    chat: string;
+    chat: number;
     total: string;
     status: string;
     user_consultation_id: number;

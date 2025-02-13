@@ -14,9 +14,10 @@ const TableObat = () => {
   const router = useRouter();
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:9001/medicines");
+        const response = await fetch(`${API_BASE_URL}/medicines`);
         if (!response.ok) {
           throw new Error("Gagal mengambil data obat");
         }
@@ -34,11 +35,12 @@ const TableObat = () => {
   }, []);
 
   const handleDelete = async (id: number) => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const confirmDelete = confirm("Apakah Anda yakin ingin menghapus obat ini?");
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:9001/medicines/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/medicines/${id}`, {
         method: "DELETE",
       });
 

@@ -16,16 +16,17 @@ const ObatDetailPage = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const fetchMedicineDetail = async () => {
       try {
-        const response = await fetch(`http://localhost:9001/medicines/${id}`);
+        const response = await fetch(`${API_BASE_URL}/medicines/${id}`);
         if (!response.ok) throw new Error("Gagal mengambil data obat");
 
         const medicineData: Medicine = await response.json();
         setMedicine(medicineData);
 
         // Ambil data vendor berdasarkan vendor_id
-        const vendorResponse = await fetch(`http://localhost:9001/vendors`);
+        const vendorResponse = await fetch(`${API_BASE_URL}/vendors`);
         if (!vendorResponse.ok) throw new Error("Gagal mengambil data vendor");
 
         const vendors: Vendor[] = await vendorResponse.json();

@@ -12,9 +12,10 @@ const Profil = () => {
   });
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const fetchUserProfile = async () => {
       try {
-        const response = await fetch("http://localhost:9001/me", {
+        const response = await fetch(`${API_BASE_URL}/me`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -13,9 +13,10 @@ const TableSpesiesIkan = () => {
   const router = useRouter();
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:9001/fish-types");
+        const response = await fetch(`${API_BASE_URL}/fish-types`);
         if (!response.ok) {
           throw new Error("Gagal mengambil data");
         }
@@ -32,11 +33,12 @@ const TableSpesiesIkan = () => {
   }, []);
 
   const handleDelete = async (id: number) => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const confirmDelete = confirm("Apakah Anda yakin ingin menghapus spesies ini?");
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:9001/fish-types/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/fish-types/${id}`, {
         method: "DELETE",
       });
 

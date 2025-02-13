@@ -30,6 +30,7 @@ const AddVendorObat = () => {
     setError("");
 
     // Validasi sederhana
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!formData.vendor_name || !formData.vendor_address || !formData.contact) {
       setError("Semua field harus diisi.");
       setLoading(false);
@@ -37,7 +38,7 @@ const AddVendorObat = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:9001/vendors", {
+      const response = await fetch(`${API_BASE_URL}/vendors`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

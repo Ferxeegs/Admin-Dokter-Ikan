@@ -12,10 +12,11 @@ const FishExpertDetailPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (id) {
       const fetchExpertDetail = async () => {
         try {
-          const response = await fetch(`http://localhost:9001/fishexperts/${id}`);
+          const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`);
           const expertData: FishExpert = await response.json();
           setExpert(expertData);
         } catch (error) {

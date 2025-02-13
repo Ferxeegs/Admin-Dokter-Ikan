@@ -1,9 +1,7 @@
 import { Sequelize } from 'sequelize';
 import db from '../config/Database.js';
 import Consultation from './ConsultationModel.js';
-import FishExperts from './FishExpertsModel.js';
-import Medicine from './MedicineModel.js';
-import PrescriptionMedicine from './PrescriptionMedicineModel.js';  // Import model PrescriptionMedicine
+import FishExperts from './FishExpertsModel.js'; // Asumsikan ada model FishExpert
 
 const { DataTypes } = Sequelize;
 
@@ -29,40 +27,28 @@ const Prescription = db.define('Prescription', {
       key: 'fishExperts_id'
     }
   },
-  medicine_fee: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0 // Default 0, akan dihitung otomatis
+  instruction: {
+    type: DataTypes.TEXT,
   },
-  created_at: {
+  created_at: { // Sesuaikan dengan nama kolom di database
     type: DataTypes.DATE,
     allowNull: false
   },
-  updated_at: {
+  updated_at: { // Sesuaikan dengan nama kolom di database
     type: DataTypes.DATE,
     allowNull: false
   }
 }, {
   tableName: 'prescriptions',
-  timestamps: true,
-  createdAt: 'created_at',
-  updatedAt: 'updated_at'
+  timestamps: true, // Aktifkan timestamps
+  createdAt: 'created_at', // Arahkan ke kolom created_at di database
+  updatedAt: 'updated_at' // Arahkan ke kolom updated_at di database
 });
 
-// Relasi dengan Consultation
+// Relasi dengan model Consultation
 Prescription.belongsTo(Consultation, { foreignKey: 'consultation_id' });
 
-// Relasi dengan FishExperts
+// Relasi dengan model FishExpert
 Prescription.belongsTo(FishExperts, { foreignKey: 'fishExperts_id' });
-
-// Relasi Many-to-Many dengan Medicine melalui tabel perantara PrescriptionMedicine
-Prescription.belongsToMany(Medicine, { through: PrescriptionMedicine, foreignKey: 'prescription_id' });
-Medicine.belongsToMany(Prescription, { through: PrescriptionMedicine, foreignKey: 'medicine_id' });
-
-// Hook untuk menghitung medicine_fee otomatis sebelum save
-Prescription.beforeSave(async (prescription) => {
-  const medicines = await prescription.getMedicines();
-  prescription.medicine_fee = medicines.reduce((total, medicine) => total + medicine.price, 0);
-});
 
 export default Prescription;

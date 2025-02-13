@@ -4,6 +4,7 @@ import UserConsultation from '../models/UserConsultationModel.js';
 import FishExpert from '../models/FishExpertsModel.js';
 import FishExpertAnswer from '../models/FishExpertAnswerModel.js';
 import jwt from "jsonwebtoken";
+import FishTypes from '../models/FishTypeModel.js';
 
 
 // Fungsi untuk mendapatkan semua konsultasi
@@ -59,7 +60,7 @@ export const createConsultation = async (req, res) => {
       user_consultation_id, 
       fishExpert_id = null, 
       fish_expert_answer_id = null, 
-      consultation_status = "Pending" 
+      consultation_status = "Waiting" 
     } = req.body;
 
     console.log("Received Data in createConsultation:", req.body);
@@ -129,24 +130,6 @@ export const updateConsultation = async (req, res) => {
     res.status(500).json({ message: 'Gagal memperbarui konsultasi', error });
   }
 };
-
-
-
-// Fungsi untuk menghapus konsultasi berdasarkan ID
-export const deleteConsultation = async (req, res) => {
-  try {
-    const consultation = await Consultation.findByPk(req.params.id);
-    if (!consultation) {
-      return res.status(404).json({ message: 'Konsultasi tidak ditemukan' });
-    }
-
-    await consultation.destroy();
-    res.status(200).json({ message: 'Konsultasi berhasil dihapus' });
-  } catch (error) {
-    res.status(500).json({ message: 'Gagal menghapus konsultasi', error });
-  }
-};
-
 
 export const getConsultationHistory = async (req, res) => {
   const token = req.headers.authorization?.split(" ")[1];
@@ -240,47 +223,107 @@ export const getConsultation = async (req, res) => {
         },
         {
           model: UserConsultation,
-          attributes: ['user_consultation_id', 'complaint', 'consultation_topic'],  // Menambahkan topik konsultasi
+          attributes: ['user_consultation_id', 'complaint', 'consultation_topic', 'fish_type_id', 'fish_length', 'fish_age', 'fish_image'],
+          include: [
+            {
+              model: FishTypes, // Pastikan ada relasi di model Sequelize
+              attributes: ['name'], // Ambil nama ikan
+            },
+          ],
         },
         {
           model: FishExpert,
-          attributes: ['fishExperts_id', 'name', 'specialization'],  // Menambahkan specialization
+          attributes: ['fishExperts_id', 'name', 'specialization'],
         },
         {
           model: FishExpertAnswer,
-          attributes: ['fish_expert_answer_id', 'answer'],
+          attributes: ['fish_expert_answer_id', 'answer', 'image'],
         },
       ],
     });
 
-    console.log('Consultation data:', JSON.stringify(consultation, null, 2)); // Log struktur data
+    console.log('Consultation data:', JSON.stringify(consultation, null, 2));
 
     if (!consultation) {
       return res.status(404).json({ error: 'Konsultasi tidak ditemukan' });
     }
-
+    const userName = consultation.User ? consultation.User.name : 'Tidak ada nama pengguna';
     const complaint = consultation.UserConsultation ? consultation.UserConsultation.complaint : 'Tidak ada keluhan';
     const answer = consultation.FishExpertAnswer ? consultation.FishExpertAnswer.answer : 'Belum ada jawaban dari ahli ikan';
-    const consultationTopic = consultation.UserConsultation ? consultation.UserConsultation.consultation_topic : 'Tidak ada topik konsultasi'; // Menambahkan topik konsultasi
+    const answerImage = consultation.FishExpertAnswer ? consultation.FishExpertAnswer.image : 'Tidak ada gambar jawaban';
+    const consultationTopic = consultation.UserConsultation ? consultation.UserConsultation.consultation_topic : 'Tidak ada topik konsultasi';
 
-    // Menambahkan name dan specialization dari FishExpert
     const fishExpert = consultation.FishExpert || {};
     const fishExpertName = fishExpert.name || 'Tidak ada nama ahli ikan';
     const fishExpertSpecialization = fishExpert.specialization || 'Tidak ada spesialisasi';
 
+    const fishTypeName = consultation.UserConsultation && consultation.UserConsultation.FishType ? consultation.UserConsultation.FishType.name : 'Tidak ada jenis ikan';
+    const fishLength = consultation.UserConsultation ? consultation.UserConsultation.fish_length : 'Tidak ada panjang ikan';
+    const fishAge = consultation.UserConsultation ? consultation.UserConsultation.fish_age : 'Tidak ada umur ikan';
+    const fishImage = consultation.UserConsultation ? consultation.UserConsultation.fish_image : '[]';
+
+    // Tambahkan chat_enabled
+    const chatEnabled = consultation.chat_enabled;
+    const consultationStatus = consultation.consultation_status;
+
     res.json({
       title: consultationTopic,
       description: complaint,
-      answer: answer,  // Menambahkan topik konsultasi
-      fish_expert_name: fishExpertName,       // Menambahkan nama ahli ikan
-      fish_expert_specialization: fishExpertSpecialization,  // Menambahkan spesialisasi ahli ikan
+      answer: answer,
+      name:userName,
+      fish_expert_name: fishExpertName,
+      fish_expert_specialization: fishExpertSpecialization,
+      fish_type: fishTypeName,
+      fish_length: fishLength,
+      fish_age: fishAge,
+      fish_image: fishImage,
+      answer_image: answerImage,
+      chat_enabled: chatEnabled, 
+      consultation_status: consultationStatus,
     });
   } catch (error) {
-    console.error('Error:', error.message, error.stack); // Log error lebih detail
+    console.error('Error:', error.message, error.stack);
     res.status(500).json({ error: 'Terjadi kesalahan pada server' });
   }
 };
 
+export const enableChat = async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    const consultation = await Consultation.findByPk(id);
+    if (!consultation) {
+      return res.status(404).json({ error: "Konsultasi tidak ditemukan" });
+    }
 
+    // Update chat_enabled menjadi true
+    consultation.chat_enabled = true;
+    await consultation.save();
 
+    res.json({ message: "Fitur chat telah diaktifkan." });
+  } catch (error) {
+    console.error("Error:", error.message);
+    res.status(500).json({ error: "Terjadi kesalahan pada server." });
+  }
+};
+
+export const endConsultation = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Cek apakah konsultasi ada
+    const consultation = await Consultation.findByPk(id);
+    if (!consultation) {
+      return res.status(404).json({ error: "Konsultasi tidak ditemukan" });
+    }
+
+    // Update status konsultasi menjadi "Closed"
+    consultation.consultation_status = "Closed";
+    await consultation.save();
+
+    res.json({ message: "Konsultasi berhasil diakhiri" });
+  } catch (error) {
+    console.error("Error saat mengupdate status konsultasi:", error.message);
+    res.status(500).json({ error: "Terjadi kesalahan saat mengakhiri konsultasi" });
+  }
+};

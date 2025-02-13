@@ -17,8 +17,9 @@ const TableActivity = () => {
   }, []);
 
   const fetchActivities = async () => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     try {
-      const response = await fetch("http://localhost:9001/consultations");
+      const response = await fetch(`${API_BASE_URL}/consultations`);
       const data = await response.json();
       const formattedData = data.map((item: any) => ({
         consultation_id: item.consultation_id,
@@ -27,16 +28,18 @@ const TableActivity = () => {
         topic: item.UserConsultation?.consultation_topic || "Topik tidak tersedia",
         tenagaAhli: item.FishExpert?.name || "Belum dipilih",
         status: item.consultation_status || "Status tidak tersedia",
-      }));
+      }));     
       setActivities(formattedData);
     } catch (error) {
       console.error("Error fetching consultations:", error);
     }
   };
+  
 
   const fetchFishExperts = async () => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     try {
-      const response = await fetch("http://localhost:9001/fishexperts");
+      const response = await fetch(`${API_BASE_URL}/fishexperts`);
       const data = await response.json();
       setFishExperts(data);
     } catch (error) {
@@ -59,13 +62,14 @@ const TableActivity = () => {
   };
 
   const closePopup = async () => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (selectedExpert && selectedConsultationId !== null) {
       try {
         console.log(`Updating consultation with ID: ${selectedConsultationId}`);
         console.log(`Selected expert ID: ${selectedExpert.fishExperts_id}`);
-
+  
         const response = await fetch(
-          `http://localhost:9001/consultations/${selectedConsultationId}`,
+          `${API_BASE_URL}/consultations/${selectedConsultationId}`,
           {
             method: "PUT",
             headers: {
@@ -73,14 +77,19 @@ const TableActivity = () => {
             },
             body: JSON.stringify({
               fishExpert_id: selectedExpert.fishExperts_id,
+              consultation_status: "In Consultation", // Menambahkan perubahan status
             }),
           }
         );
-
+  
         if (response.ok) {
           console.log("Consultation updated successfully");
+  
+          // Refresh data agar status berubah di UI
           await fetchActivities();
+  
           setSelectedExpert(null);
+          setSelectedConsultationId(null);
         } else {
           console.error("Error updating consultation:", response.statusText);
         }
@@ -89,6 +98,7 @@ const TableActivity = () => {
       }
     }
   };
+  
 
   const filteredActivities = activities.filter((activity) =>
     activity.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -131,9 +141,8 @@ const TableActivity = () => {
                     {visibleDropdownIndex === key && (
                       <div className="absolute bg-white shadow-lg rounded-md mt-2 w-48 max-h-60 overflow-y-auto border border-gray-200 z-10">
                         <ul>
-                          {fishExperts.map((expert) => (
-                            <li
-                              key={expert.id}
+                        {fishExperts.map((expert, index) => (
+                          <li key={index}
                               className="py-2 px-4 cursor-pointer hover:bg-gray-200"
                               onClick={() => handleExpertSelection(expert)}
                             >
@@ -165,6 +174,23 @@ const TableActivity = () => {
           </tbody>
         </table>
       </div>
+      {selectedExpert && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-5 rounded-md shadow-lg w-1/3">
+            <h3 className="text-xl font-semibold">Detail Tenaga Ahli</h3>
+            <p><strong>Nama:</strong> {selectedExpert.name}</p>
+            <p><strong>Telepon:</strong> {selectedExpert.phone_number}</p>
+            <p><strong>Spesialisasi:</strong> {selectedExpert.specialization}</p>
+            <p><strong>Pengalaman:</strong> {selectedExpert.experience}</p>
+            <button
+              className="mt-4 bg-blue-500 text-white py-2 px-4 rounded"
+              onClick={closePopup}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

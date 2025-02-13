@@ -14,6 +14,7 @@ const AddExpert = () => {
     experience: "",
     email: "",
     password: "",
+    image: "",
     role: "expert",
   });
 
@@ -26,6 +27,7 @@ const AddExpert = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -38,7 +40,7 @@ const AddExpert = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:9001/fishexperts", {
+      const response = await fetch(`${API_BASE_URL}/fishexperts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -139,6 +141,17 @@ const AddExpert = () => {
               onChange={handleChange}
               className="w-full p-2 border rounded"
               required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700">Image</label>
+            <input
+              type="image"
+              name="image"
+              value={formData.image}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
             />
           </div>
 

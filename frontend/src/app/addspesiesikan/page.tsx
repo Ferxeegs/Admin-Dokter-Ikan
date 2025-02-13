@@ -31,6 +31,7 @@ const AddSpesiesIkan = () => {
     setSuccess(false);
 
     // Validasi sederhana
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!formData.name || !formData.description || !formData.habitat) {
       setError("Semua field harus diisi.");
       setLoading(false);
@@ -38,7 +39,7 @@ const AddSpesiesIkan = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:9001/fish-types", {
+      const response = await fetch(`${API_BASE_URL}/fish-types`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

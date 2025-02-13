@@ -15,6 +15,7 @@ const Dashboard = () => {
   const [totalConsultations, setTotalConsultations] = useState<number>(0);
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const fetchData = async (url: string, setData: (value: number) => void) => {
       try {
         const response = await fetch(url);
@@ -26,9 +27,9 @@ const Dashboard = () => {
       }
     };
 
-    fetchData("http://localhost:9001/users", setTotalUsers);
-    fetchData("http://localhost:9001/fishexperts", setTotalExperts);
-    fetchData("http://localhost:9001/consultations", setTotalConsultations);
+    fetchData(`${API_BASE_URL}/users`, setTotalUsers);
+    fetchData(`${API_BASE_URL}/fishexperts`, setTotalExperts);
+    fetchData(`${API_BASE_URL}/consultations`, setTotalConsultations);
   }, []);
 
   return (

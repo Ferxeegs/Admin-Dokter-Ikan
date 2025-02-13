@@ -45,6 +45,11 @@ const Consultation = db.define('Consultation', {
       key: 'fish_expert_answer_id',
     },
   },
+  chat_enabled: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  },
   consultation_status: {
     type: DataTypes.STRING,
   },

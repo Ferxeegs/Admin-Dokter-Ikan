@@ -16,10 +16,11 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (id) {
       const fetchMedicineDetail = async () => {
         try {
-          const response = await fetch(`http://localhost:9001/medicines/${id}`);
+          const response = await fetch(`${API_BASE_URL}/medicines/${id}`);
           const medicineData: Medicine = await response.json();
           setMedicine(medicineData);
           setFormData(medicineData);
@@ -43,6 +44,7 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
     setSuccess(false);
     setError("");
 
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!formData?.medicine_name || !formData?.contain || !formData?.dosage || !formData?.price) {
       setError("Semua field harus diisi.");
       setLoading(false);
@@ -50,7 +52,7 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:9001/medicines/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/medicines/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -23,6 +23,7 @@ const TambahUser = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -35,7 +36,7 @@ const TambahUser = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:9001/register", {
+      const response = await fetch(`${API_BASE_URL}/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

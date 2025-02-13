@@ -1,7 +1,7 @@
 import { Sequelize } from 'sequelize';
 import db from '../config/Database.js';
-import Prescription from './PrescriptionModel.js'; // Asosiasi ke resep medis
-import User from './UserModel.js'; // Asosiasi ke pengguna
+import Prescription from './PrescriptionModel.js'; 
+import Consultation from './ConsultationModel.js'; // Harus diimpor agar foreign key valid
 
 const { DataTypes } = Sequelize;
 
@@ -11,7 +11,15 @@ const Payment = db.define('Payment', {
     primaryKey: true,
     autoIncrement: true
   },
-    prescription_id: {
+  consultation_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Consultation,
+      key: 'consultation_id'
+    }
+  },
+  prescription_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
@@ -19,49 +27,22 @@ const Payment = db.define('Payment', {
       key: 'prescription_id'
     }
   },
-  user_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: User,
-      key: 'user_id'
-    }
-  },
-  medicine_fee: {
-    type: DataTypes.INTEGER, // Menggunakan INTEGER
-    allowNull: false
-  },
-  consultation_fee: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 10000 // Nilai tetap 10000
-  },
   total_fee: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    defaultValue: 0 // Default 0, akan dihitung sebelum disimpan
+    type: DataTypes.INTEGER, // Pakai INTEGER karena ini harga
+    allowNull: false
   },
   payment_status: {
     type: DataTypes.STRING,
-    allowNull: false,
-    defaultValue: "Pending"
+    defaultValue: "pending",
+    allowNull: false
   }
 }, {
   tableName: 'payment',
-  timestamps: false
+  timestamps: true 
 });
 
-// Relasi dengan MedicalPrescription dan User
-Payment.belongsTo(Prescription, { foreignKey: 'medical_prescription_id' });
-Payment.belongsTo(User, { foreignKey: 'user_id' });
-
-// Hook untuk menghitung total_fee sebelum menyimpan data
-Payment.beforeCreate((payment) => {
-  payment.total_fee = payment.medicine_fee + payment.consultation_fee;
-});
-
-Payment.beforeUpdate((payment) => {
-  payment.total_fee = payment.medicine_fee + payment.consultation_fee;
-});
+// Relasi dengan Consultation dan Prescription
+Payment.belongsTo(Consultation, { foreignKey: 'consultation_id' });
+Payment.belongsTo(Prescription, { foreignKey: 'prescription_id' });
 
 export default Payment;

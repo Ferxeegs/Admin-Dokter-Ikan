@@ -45,6 +45,13 @@ const FishExperts = db.define('FishExperts', {
     allowNull: false,
     defaultValue: 'expert', // Role default sebagai 'expert'
   },
+  image_url: {
+    type: DataTypes.STRING,
+    allowNull: true, // Bisa kosong jika belum ada gambar
+    validate: {
+      isUrl: true, // Validasi format URL
+    },
+  },
 }, {
   tableName: 'fishexperts',
   timestamps: false, // Mengaktifkan createdAt dan updatedAt

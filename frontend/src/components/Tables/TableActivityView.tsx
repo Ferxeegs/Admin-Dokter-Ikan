@@ -13,8 +13,9 @@ const TableActivityView = () => {
   }, []);
 
   const fetchActivities = async () => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     try {
-      const response = await fetch("http://localhost:9001/consultations");
+      const response = await fetch(`${API_BASE_URL}/consultations`);
       const data = await response.json();
       const formattedData = data.map((item: any) => ({
         consultation_id: item.consultation_id,

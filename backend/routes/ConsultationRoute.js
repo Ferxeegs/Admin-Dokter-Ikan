@@ -3,9 +3,10 @@ import {
   getAllConsultations,
   createConsultation,
   updateConsultation,
-  deleteConsultation,
   getConsultationHistory,
-  getConsultation
+  getConsultation,
+  enableChat,
+  endConsultation
 } from '../controllers/ConsultationController.js';
 import { authenticate } from "../middlewares/authMiddleware.js";
 
@@ -17,6 +18,7 @@ router.get('/consultations/:id', getConsultation);
 router.get('/consultation', getConsultationHistory)
 router.post('/consultations', createConsultation);
 router.put('/consultations/:id', updateConsultation);
-router.delete('/consultations/:id', deleteConsultation);
+router.patch("/consultations/:id/enable-chat", enableChat);
+router.patch("/consultations/:id/end", endConsultation);
 
 export default router;

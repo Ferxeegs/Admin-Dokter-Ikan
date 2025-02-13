@@ -16,10 +16,11 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (id) {
       const fetchUserDetail = async () => {
         try {
-          const response = await fetch(`http://localhost:9001/users/${id}`);
+          const response = await fetch(`${API_BASE_URL}/users/${id}`);
           const userData: Akun = await response.json();
           setUser(userData);
           setFormData(userData);
@@ -38,6 +39,7 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     e.preventDefault();
     setLoading(true);
     setSuccess(false);
@@ -50,7 +52,7 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:9001/users/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/users/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

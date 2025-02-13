@@ -16,10 +16,11 @@ const EditVendorObatPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (id) {
       const fetchVendorDetail = async () => {
         try {
-          const response = await fetch(`http://localhost:9001/vendors/${id}`);
+          const response = await fetch(`${API_BASE_URL}/vendors/${id}`);
           const vendorData: Vendor = await response.json();
           setVendor(vendorData);
           setFormData(vendorData);
@@ -43,6 +44,7 @@ const EditVendorObatPage = ({ params }: { params: { id: string } }) => {
     setSuccess(false);
     setError("");
 
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!formData?.vendor_name || !formData?.vendor_address || !formData?.contact) {
       setError("Semua field harus diisi.");
       setLoading(false);
@@ -50,7 +52,7 @@ const EditVendorObatPage = ({ params }: { params: { id: string } }) => {
     }
 
     try {
-      const response = await fetch(`http://localhost:9001/vendors/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/vendors/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

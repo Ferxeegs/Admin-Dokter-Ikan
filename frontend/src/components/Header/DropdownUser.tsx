@@ -12,10 +12,9 @@ const LogoutButton: React.FC = () => {
   const router = useRouter();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/auth/signin");
+    router.push("/logout");
   };
-
+  
   return (
     <button onClick={handleLogout} className="text-sm font-medium">
       Logout
@@ -51,7 +50,7 @@ const DropdownUser: React.FC = () => {
         href="#"
       >
         {/* Nama Admin */}
-        <span className="text-sm font-medium">{adminName}</span>
+        <span className="text-xl font-semibold">{adminName}</span>
 
         {/* Icon Profil */}
         <span className="h-12 w-12 rounded-full">

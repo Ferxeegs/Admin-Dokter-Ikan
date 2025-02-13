@@ -65,7 +65,7 @@ const Header = (props: {
         <div className="flex justify-center">
           <Link
             className="text-black-2 font-extrabold text-xl hover:text-blue-400"
-            href="/"
+            href="/dashboard"
             >
             Admin Dokter Ikan
            </Link>

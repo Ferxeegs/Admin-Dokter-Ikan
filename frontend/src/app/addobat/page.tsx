@@ -22,9 +22,10 @@ const AddObat = () => {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const fetchVendors = async () => {
       try {
-        const response = await fetch("http://localhost:9001/vendors");
+        const response = await fetch(`${API_BASE_URL}/vendors`);
         if (!response.ok) {
           throw new Error("Gagal mengambil data vendor");
         }
@@ -47,6 +48,7 @@ const AddObat = () => {
     setSuccess(false);
     setError("");
 
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!formData.medicine_name || !formData.contain || !formData.dosage || !formData.price || !formData.vendor_id) {
       setError("Semua field harus diisi.");
       setLoading(false);
@@ -54,7 +56,7 @@ const AddObat = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:9001/medicines", {
+      const response = await fetch(`${API_BASE_URL}/medicines`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...formData, price: Number(formData.price), vendor_id: Number(formData.vendor_id) }),
