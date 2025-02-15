@@ -39,17 +39,24 @@ export const updateFishType = async (req, res) => {
   try {
     const fishType = await FishType.findByPk(req.params.id);
     if (!fishType) {
-      return res.status(404).json({ message: 'Jenis ikan tidak ditemukan' });
+      return res.status(404).json({ message: "Jenis ikan tidak ditemukan" });
     }
 
-    const { name, description, habitat, image } = req.body;
-    await fishType.update({ name, description, habitat, image });
+    const { name, description, habitat } = req.body;
+    let imageUrl = fishType.image; // Gunakan gambar lama jika tidak ada yang baru
 
-    res.status(200).json({ message: 'Jenis ikan berhasil diperbarui', fishType });
+    if (req.file) {
+      imageUrl = `/uploads/${req.file.filename}`; // Path penyimpanan gambar
+    }
+
+    await fishType.update({ name, description, habitat, image: imageUrl });
+
+    res.status(200).json({ message: "Jenis ikan berhasil diperbarui", fishType });
   } catch (error) {
-    res.status(500).json({ message: 'Gagal memperbarui jenis ikan', error });
+    res.status(500).json({ message: "Gagal memperbarui jenis ikan", error });
   }
 };
+
 
 // Fungsi untuk menghapus Fish Type
 export const deleteFishType = async (req, res) => {

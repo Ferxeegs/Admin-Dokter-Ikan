@@ -31,6 +31,8 @@ const TableTransaksi = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 
   useEffect(() => {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -85,6 +87,49 @@ const TableTransaksi = () => {
     return user?.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
+  const openModal = (payment: Payment) => {
+    setSelectedPayment(payment);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPayment(null);
+  };
+
+  const updateStatus = async () => {
+    if (!selectedPayment) return;
+    
+    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const newStatus = selectedPayment.payment_status === "pending" ? "selesai" : "pending";
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/payments/${selectedPayment.payment_id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ payment_status: newStatus }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Gagal memperbarui status");
+      }
+
+      setTransactions((prevTransactions) =>
+        prevTransactions.map((transaction) =>
+          transaction.payment_id === selectedPayment.payment_id
+            ? { ...transaction, payment_status: newStatus }
+            : transaction
+        )
+      );
+
+      closeModal();
+    } catch (error) {
+      setError("Gagal memperbarui status pembayaran.");
+    }
+  };
+
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default">
       <div className="mb-4">
@@ -113,6 +158,7 @@ const TableTransaksi = () => {
                 <th className="px-4 py-4 font-medium text-black dark:text-white">Topik Konsultasi</th>
                 <th className="px-4 py-4 font-medium text-black dark:text-white">Chat</th>
                 <th className="px-4 py-4 font-medium text-black dark:text-white">Total</th>
+                <th className="px-4 py-4 font-medium text-black dark:text-white">Bukti Pembayaran</th>
                 <th className="px-4 py-4 font-medium text-black dark:text-white">Status</th>
               </tr>
             </thead>
@@ -133,14 +179,18 @@ const TableTransaksi = () => {
                     </td>
                     <td className="px-4 py-4">Rp. {payment.total_fee.toLocaleString()}</td>
                     <td className="px-4 py-4">
-                      <span
+                      {consultation?.chatEnabled ? "Aktif" : "Tidak Aktif"}
+                    </td>
+                    <td className="px-4 py-4 text-center">
+                      <button
                         className={`px-3 py-1 rounded-lg text-white ${
                           payment.payment_status === "pending" ? "bg-yellow-500" : "bg-green-500"
                         }`}
+                        onClick={() => openModal(payment)}
                       >
                         {payment.payment_status}
-                      </span>
-                    </td>
+                      </button>
+                    </td>                   
                   </tr>
                 );
               })}
@@ -148,6 +198,17 @@ const TableTransaksi = () => {
           </table>
         )}
       </div>
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <p>Konfirmasi perubahan status pembayaran?</p>
+            <div className="mt-4 flex justify-end">
+              <button className="bg-gray-400 text-white px-4 py-2 rounded mr-2" onClick={closeModal}>Batal</button>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={updateStatus}>Ya</button>             
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

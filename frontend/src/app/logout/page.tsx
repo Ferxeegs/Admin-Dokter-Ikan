@@ -26,16 +26,16 @@ const LogoutPage: React.FC = () => {
             <h2 className="text-lg font-semibold mb-4">Apakah Anda ingin keluar?</h2>
             <div className="flex justify-center gap-4">
               <button 
-                onClick={handleLogout} 
-                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-              >
-                Ya
-              </button>
-              <button 
                 onClick={handleCancel} 
                 className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
               >
                 Tidak
+              </button>
+              <button 
+                onClick={handleLogout} 
+                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+              >
+                Ya
               </button>
             </div>
           </div>

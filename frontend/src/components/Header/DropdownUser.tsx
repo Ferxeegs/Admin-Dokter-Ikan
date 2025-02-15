@@ -106,7 +106,7 @@ const DropdownUser: React.FC = () => {
                     fill=""
                   />
                 </svg>
-                Profile
+                Profil
               </Link>
             </li>
           </ul>

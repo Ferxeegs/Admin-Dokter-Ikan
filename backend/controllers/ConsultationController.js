@@ -94,40 +94,42 @@ export const createConsultation = async (req, res) => {
   }
 };
 
-
-
 // Fungsi untuk memperbarui konsultasi berdasarkan ID
 export const updateConsultation = async (req, res) => {
   try {
     const consultation = await Consultation.findByPk(req.params.id);
     if (!consultation) {
-      return res.status(404).json({ message: 'Konsultasi tidak ditemukan' });
+      return res.status(404).json({ message: "Konsultasi tidak ditemukan" });
     }
 
-    const { fishExpert_id } = req.body; // Hanya menerima fishExpert_id dari frontend
+    const { fishExpert_id, consultation_status } = req.body; // Tambahkan consultation_status
 
-    console.log('=== Sebelum Update ===');
-    console.log('Existing consultation:', consultation.toJSON());
-    console.log('Received fishExpert_id:', fishExpert_id);
+    console.log("=== Sebelum Update ===");
+    console.log("Existing consultation:", consultation.toJSON());
+    console.log("Received fishExpert_id:", fishExpert_id);
+    console.log("Received consultation_status:", consultation_status);
 
-    // Validasi: Pastikan fishExpert_id dikirim
+    // Validasi input
     if (!fishExpert_id) {
-      return res.status(400).json({ message: 'fishExpert_id wajib dikirim' });
+      return res.status(400).json({ message: "fishExpert_id wajib dikirim" });
     }
 
-    // Perbarui fishExpert_id di database
-    await consultation.update({ fishExpert_id });
+    // Perbarui fishExpert_id & consultation_status
+    await consultation.update({ 
+      fishExpert_id, 
+      consultation_status: consultation_status || "In Consultation" // Default jika tidak dikirim
+    });
 
     // Reload data terbaru dari database
     await consultation.reload();
 
-    console.log('=== Setelah Update ===');
-    console.log('Updated consultation:', consultation.toJSON());
+    console.log("=== Setelah Update ===");
+    console.log("Updated consultation:", consultation.toJSON());
 
-    res.status(200).json({ message: 'Konsultasi berhasil diperbarui', consultation });
+    res.status(200).json({ message: "Konsultasi berhasil diperbarui", consultation });
   } catch (error) {
-    console.error('Error updating consultation:', error);
-    res.status(500).json({ message: 'Gagal memperbarui konsultasi', error });
+    console.error("Error updating consultation:", error);
+    res.status(500).json({ message: "Gagal memperbarui konsultasi", error });
   }
 };
 

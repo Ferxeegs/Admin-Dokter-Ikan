@@ -47,13 +47,21 @@ const SpesiesIkanDetailPage = () => {
             <p><strong>Nama:</strong> {fish.name}</p>
             <p><strong>Deskripsi:</strong> {fish.description}</p>
             <p><strong>Habitat:</strong> {fish.habitat}</p>
-            {fish.image && (
-              <img
-                src={fish.image}
-                alt={fish.name}
-                className="mt-4 rounded w-full h-auto"
-              />
-            )}
+
+            {/* Menampilkan gambar ikan */}
+            <div className="mt-4 flex justify-center">
+              {fish.image ? (
+                <img
+                  src={fish.image}
+                  alt={fish.name}
+                  className="rounded-lg object-cover w-full max-h-[300px] border"
+                />
+              ) : (
+                <div className="w-full max-h-[300px] flex items-center justify-center bg-gray-200 rounded-lg">
+                  <p className="text-gray-500">Tidak ada gambar</p>
+                </div>
+              )}
+            </div>
           </div>
         ) : (
           <p className="text-gray-500">Data tidak ditemukan.</p>

@@ -137,16 +137,9 @@ export const updateUser = async (req, res) => {
       return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
     }
 
-    const { name, email, password, address, role } = req.body;
-
-    // Jika password diberikan, enkripsi password baru
-    let updatedData = { name, email, address, role };
-
-    if (password) {
-      updatedData.password = await bcrypt.hash(password, 10);  // Hash password baru
-    }
-
-    await user.update(updatedData);
+    const { name, email, address, role } = req.body; // Hapus password dari destructuring
+    
+    await user.update({ name, email, address, role });
 
     res.status(200).json({ message: 'Pengguna berhasil diperbarui', user });
   } catch (error) {

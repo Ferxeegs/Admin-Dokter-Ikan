@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+
 
 const AddSpesiesIkan = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ const AddSpesiesIkan = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   // Handle perubahan input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -59,6 +61,11 @@ const AddSpesiesIkan = () => {
       setError("Terjadi kesalahan. Coba lagi.");
     } finally {
       setLoading(false);
+    }
+  };
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
     }
   };
 
@@ -116,16 +123,24 @@ const AddSpesiesIkan = () => {
             )}
             {/* Field Gambar (Opsional) */}
             <div>
-              <label className="block text-gray-700">URL Gambar (Opsional)</label>
-              <input
-                type="text"
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
-                className="w-full p-2 border rounded"
-              />
-            </div>
+            <label className="block text-gray-700">Gambar</label>
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              ref={fileInputRef}
+              onChange={handleChange}
+            />
+            <button
+              className="bg-white text-[#69CBF4] px-6 py-2 rounded-lg hover:bg-[#f0f0f0] transition text-sm font-semibold w-full md:w-auto border-2 border-[#69CBF4] flex items-center justify-center space-x-2"
+              onClick={handleButtonClick}
+              type="button"
+            >
+              <img src="/images/icon/ic_file.png" alt="File" className="w-4 h-4" />
+              <span>Pilih File</span>
+            </button>
 
+        </div>
             {/* Tombol Submit */}
             <button
               type="submit"

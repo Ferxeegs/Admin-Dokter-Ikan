@@ -17,10 +17,13 @@ const TableActivity = () => {
   }, []);
 
   const fetchActivities = async () => {
+    console.log(" Fetching updated consultations...");
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     try {
       const response = await fetch(`${API_BASE_URL}/consultations`);
       const data = await response.json();
+      console.log("📡 Data consultations terbaru:", data);
+      
       const formattedData = data.map((item: any) => ({
         consultation_id: item.consultation_id,
         name: item.User?.name || "Nama tidak tersedia",
@@ -28,12 +31,13 @@ const TableActivity = () => {
         topic: item.UserConsultation?.consultation_topic || "Topik tidak tersedia",
         tenagaAhli: item.FishExpert?.name || "Belum dipilih",
         status: item.consultation_status || "Status tidak tersedia",
-      }));     
+      }));
+  
       setActivities(formattedData);
     } catch (error) {
-      console.error("Error fetching consultations:", error);
+      console.error(" Error fetching consultations:", error);
     }
-  };
+  };  
   
 
   const fetchFishExperts = async () => {
@@ -63,41 +67,51 @@ const TableActivity = () => {
 
   const closePopup = async () => {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    if (selectedExpert && selectedConsultationId !== null) {
-      try {
-        console.log(`Updating consultation with ID: ${selectedConsultationId}`);
-        console.log(`Selected expert ID: ${selectedExpert.fishExperts_id}`);
-  
-        const response = await fetch(
-          `${API_BASE_URL}/consultations/${selectedConsultationId}`,
-          {
-            method: "PUT",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              fishExpert_id: selectedExpert.fishExperts_id,
-              consultation_status: "In Consultation", // Menambahkan perubahan status
-            }),
-          }
-        );
-  
-        if (response.ok) {
-          console.log("Consultation updated successfully");
-  
-          // Refresh data agar status berubah di UI
-          await fetchActivities();
-  
-          setSelectedExpert(null);
-          setSelectedConsultationId(null);
-        } else {
-          console.error("Error updating consultation:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error updating consultation:", error);
-      }
+    
+    if (!selectedExpert || selectedConsultationId === null) {
+      console.error("Error: Tidak ada tenaga ahli atau konsultasi yang dipilih.");
+      return;
     }
-  };
+  
+    try {
+      console.log(` Mengupdate konsultasi dengan ID: ${selectedConsultationId}`);
+      console.log(` Tenaga ahli terpilih: ${selectedExpert.fishExperts_id}`);
+  
+      const response = await fetch(
+        `${API_BASE_URL}/consultations/${selectedConsultationId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            fishExpert_id: selectedExpert.fishExperts_id,
+            consultation_status: "In Consultation",
+          }),
+        }
+      );
+  
+      const result = await response.json();
+      console.log("📡 Respons API:", result);
+  
+      if (!response.ok) {
+        console.error(` Gagal update konsultasi: ${response.status} - ${response.statusText}`);
+        return;
+      }
+  
+      console.log("✅ Konsultasi berhasil diperbarui ke 'In Consultation'");
+  
+      // Refresh data agar status berubah di UI
+      await fetchActivities();
+  
+      // Reset state dan tutup pop-up
+      setSelectedExpert(null);
+      setSelectedConsultationId(null);
+    } catch (error) {
+      console.error("Terjadi kesalahan saat update konsultasi:", error);
+    }
+  };  
+  
   
 
   const filteredActivities = activities.filter((activity) =>

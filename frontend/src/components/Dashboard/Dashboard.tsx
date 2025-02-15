@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import CardDataStats from "../CardDataStats";
-import TableRevenue from "../Tables/TableRevenue";
 import ChartTwo from "../Charts/ChartTwo";
 import Image from "next/image";
 
@@ -86,7 +85,7 @@ const Dashboard: React.FC = () => {
       <p className="text-lg font-bold text-black mt-5">Transaksi terbaru</p>
       <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
         <div className="col-span-12 xl:col-span-12">
-          <TableRevenue />
+          
         </div>
         <ChartTwo />
       </div>

@@ -82,6 +82,10 @@ export const updatePayment = async (req, res) => {
       return res.status(404).json({ message: 'Data pembayaran tidak ditemukan' });
     }
 
+    if (!['pending', 'selesai'].includes(payment_status)) {
+      return res.status(400).json({ message: 'Status pembayaran tidak valid' });
+    }
+
     await payment.update({ payment_status });
 
     res.status(200).json({ message: 'Data pembayaran berhasil diperbarui', data: payment });
@@ -89,6 +93,7 @@ export const updatePayment = async (req, res) => {
     res.status(500).json({ message: 'Gagal memperbarui data pembayaran', error: error.message });
   }
 };
+
 
 export const getPaymentByConsultationId = async (req, res) => {
   try {
