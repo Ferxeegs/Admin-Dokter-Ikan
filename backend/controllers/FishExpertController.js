@@ -71,7 +71,7 @@ export const createFishExpert = async (req, res) => {
 export const updateFishExpert = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, email, phone_number, specialization, experience } = req.body;
+    const { name, email, phone_number, specialization, experience, image_url } = req.body;
 
     const expert = await FishExperts.findByPk(id);
     if (!expert) {
@@ -84,6 +84,7 @@ export const updateFishExpert = async (req, res) => {
       phone_number,
       specialization,
       experience,
+      image_url,
     });
 
     res.status(200).json({

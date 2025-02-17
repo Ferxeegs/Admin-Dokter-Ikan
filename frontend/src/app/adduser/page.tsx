@@ -11,6 +11,8 @@ const TambahUser = () => {
     name: "",
     email: "",
     password: "",
+    phone_number: "",
+    address: "",
     role: "user",
   });
 
@@ -100,6 +102,30 @@ const TambahUser = () => {
               type="password"
               name="password"
               value={formData.password}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700">Nomor Telepon</label>
+            <input
+              type="phone_number"
+              name="phone_number"
+              value={formData.phone_number}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-gray-700">Alamat</label>
+            <input
+              type="address"
+              name="address"
+              value={formData.address}
               onChange={handleChange}
               className="w-full p-2 border rounded"
               required

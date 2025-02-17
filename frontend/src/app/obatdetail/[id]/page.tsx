@@ -14,9 +14,9 @@ const ObatDetailPage = () => {
   const [vendorName, setVendorName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const fetchMedicineDetail = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/medicines/${id}`);
@@ -63,13 +63,19 @@ const ObatDetailPage = () => {
               <p><strong>Harga:</strong> Rp {medicine.price.toLocaleString()}</p>
               <p><strong>Stok:</strong> {medicine.stock.toLocaleString()}</p>
               <p><strong>Vendor:</strong> {vendorName}</p>
-              {medicine.medicine_image && (
+              <div className="mt-4 flex justify-center">
+              {medicine.medicine_image ? (
                 <img
-                  src={medicine.medicine_image}
-                  alt={medicine.medicine_name}
-                  className="mt-4 rounded w-full h-auto"
+                  src={`${API_BASE_URL}${medicine.medicine_image}`}
+                  alt={medicine.medicine_image}
+                  className="rounded-lg object-cover w-full max-h-[300px] border"
                 />
+              ) : (
+                <div className="w-full max-h-[300px] flex items-center justify-center bg-gray-200 rounded-lg">
+                  <p className="text-gray-500">Tidak ada gambar</p>
+                </div>
               )}
+            </div>
             </div>
           ) : (
             <p className="text-gray-500">Data tidak ditemukan.</p>

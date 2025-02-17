@@ -8,6 +8,7 @@ const Profil = () => {
   const [user, setUser] = useState({
     name: "",
     email: "",
+    phone_number: "",
     address: "",
   });
 
@@ -32,6 +33,7 @@ const Profil = () => {
         setUser({
           name: data.name || "",
           email: data.email || "",
+          phone_number: data.phone_number || "",
           address: data.address || "",
         });
       } catch (error) {
@@ -78,6 +80,19 @@ const Profil = () => {
                       type="email"
                       id="email"
                       value={user.email}
+                      readOnly
+                    />
+                  </div>
+
+                  <div className="mb-5.5">
+                    <label className="mb-3 block text-sm font-medium text-black dark:text-white" htmlFor="phone_number">
+                      Nomor Telepon
+                    </label>
+                    <input
+                      className="w-full rounded border border-stroke bg-gray px-4.5 py-3 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                      type="phone_number"
+                      id="phone_number"
+                      value={user.phone_number}
                       readOnly
                     />
                   </div>

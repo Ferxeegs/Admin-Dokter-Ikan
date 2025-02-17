@@ -12,32 +12,32 @@ if (!fs.existsSync(UPLOADS_DIR)) {
 // Konfigurasi Multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, UPLOADS_DIR);
+    cb(null, 'uploads/');  // Tentukan folder tempat file disimpan
   },
   filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
+    cb(null, Date.now() + path.extname(file.originalname));  // Buat nama file unik
   },
 });
 
-export const upload = multer({ storage });
+// Inisialisasi multer dengan storage
+const upload = multer({ storage });
 
-// Controller untuk upload file
-export const uploadFiles = async (req, res) => {
-    try {
-      if (!req.file) {
-        return res.status(400).json({ message: "Tidak ada file yang diunggah." });
-      }
-  
-      const filePath = `/uploads/${req.file.filename}`; // Path relatif untuk frontend
-  
-      res.status(201).json({ message: "File berhasil diunggah", filePath });
-    } catch (error) {
-      console.error("❌ Error Upload:", error.message);
-      res.status(500).json({ message: "Gagal mengunggah file", error: error.message });
+export const uploadFiles = upload.single('files');  // Gunakan middleware multer untuk menangani upload file
+
+export const uploadFilesController = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "Tidak ada file yang diunggah." });
     }
-  };
 
+    const filePath = `/uploads/${req.file.filename}`; // Path relatif untuk frontend
+
+    res.status(201).json({ message: "File berhasil diunggah", filePath });
+  } catch (error) {
+    console.error("❌ Error Upload:", error.message);
+    res.status(500).json({ message: "Gagal mengunggah file", error: error.message });
+  }
+};
 export const getFiles = (req, res) => {
     fs.readdir(UPLOADS_DIR, (err, files) => {
         if (err) {

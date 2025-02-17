@@ -31,6 +31,9 @@ const User = db.define('User', {
     type: DataTypes.STRING,
     allowNull: false
   },
+  phone_number: {
+    type: DataTypes.STRING,
+  },
   address: {
     type: DataTypes.STRING
   },

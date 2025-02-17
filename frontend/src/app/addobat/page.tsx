@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
@@ -15,30 +15,28 @@ const AddObat = () => {
     price: "",
     stock: "",
     vendor_id: "",
+    medicine_image: ""
   });
   const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [imageUrl, setImageUrl] = useState<string>(""); // Menyimpan URL gambar yang diupload
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    // Fetch vendors data when component mounts
     const fetchVendors = async () => {
-      try {
-        const response = await fetch(`${API_BASE_URL}/vendors`);
-        if (!response.ok) {
-          throw new Error("Gagal mengambil data vendor");
-        }
-        const data = await response.json();
-        setVendors(data);
-      } catch (err) {
-        setError("Terjadi kesalahan saat mengambil data vendor.");
-      }
+      const response = await fetch(`${API_BASE_URL}/vendors`);
+      const data = await response.json();
+      setVendors(data);
     };
+
     fetchVendors();
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -49,7 +47,7 @@ const AddObat = () => {
     setError("");
 
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    if (!formData.medicine_name || !formData.contain || !formData.dosage || !formData.price || !formData.vendor_id) {
+    if (!formData.medicine_name || !formData.contain || !formData.dosage || !formData.price || !formData.vendor_id || !imageUrl) {
       setError("Semua field harus diisi.");
       setLoading(false);
       return;
@@ -59,7 +57,7 @@ const AddObat = () => {
       const response = await fetch(`${API_BASE_URL}/medicines`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, price: Number(formData.price), vendor_id: Number(formData.vendor_id) }),
+        body: JSON.stringify({ ...formData, price: Number(formData.price), vendor_id: Number(formData.vendor_id), medicine_image: imageUrl }),
       });
 
       if (!response.ok) {
@@ -77,43 +75,109 @@ const AddObat = () => {
     }
   };
 
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+  
+    const formData = new FormData();
+    formData.append("files", file);
+  
+    try {
+      const response = await fetch(`${API_BASE_URL}/upload`, {
+        method: "POST",
+        body: formData,  // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
+      });
+  
+      const result = await response.json();
+      console.log("Hasil unggahan gambar:", result);
+  
+      if (response.ok) {
+        setImageUrl(result.filePath); // Menggunakan path relatif
+      } else {
+        alert("Upload gagal: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error saat mengupload:", error);
+      alert("Terjadi kesalahan saat mengupload.");
+    }
+  };
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Tambah Obat" />
-      
-      {/* Wrapper untuk form dan tombol kembali */}
+
       <div className="relative max-w-xl mx-auto">
-        {/* Card Form */}
         <div className="bg-white p-6 rounded-lg shadow-md">
           <h2 className="text-2xl font-semibold text-gray-700 mb-4">Tambah Obat</h2>
+
           {error && <p className="text-red-500">{error}</p>}
+
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input type="text" name="medicine_name" value={formData.medicine_name} onChange={handleChange} placeholder="Nama Obat" className="w-full p-2 border rounded" required />
-            <input type="text" name="contain" value={formData.contain} onChange={handleChange} placeholder="Kandungan" className="w-full p-2 border rounded" required />
-            <input type="text" name="dosage" value={formData.dosage} onChange={handleChange} placeholder="Dosis" className="w-full p-2 border rounded" required />
-            <input type="number" name="price" value={formData.price} onChange={handleChange} placeholder="Harga" className="w-full p-2 border rounded" required />
-            <input type="number" name="stock" value={formData.stock} onChange={handleChange} placeholder="Stok" className="w-full p-2 border rounded" required />
-            <select name="vendor_id" value={formData.vendor_id} onChange={handleChange} className="w-full p-2 border rounded" required>
-              <option value="">Pilih Vendor</option>
-              {vendors.map((vendor) => (
-                <option key={vendor.vendor_id} value={vendor.vendor_id}>{vendor.vendor_name}</option>
-              ))}
-            </select>
-            <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600" disabled={loading}>
+            <div>
+              <label className="block text-gray-700">Nama Obat</label>
+              <input type="text" name="medicine_name" value={formData.medicine_name} onChange={handleChange} className="w-full p-2 border rounded" required />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Kandungan</label>
+              <input type="text" name="contain" value={formData.contain} onChange={handleChange} className="w-full p-2 border rounded" required />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Dosis</label>
+              <input type="text" name="dosage" value={formData.dosage} onChange={handleChange} className="w-full p-2 border rounded" required />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Harga</label>
+              <input type="number" name="price" value={formData.price} onChange={handleChange} className="w-full p-2 border rounded" required />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Stok</label>
+              <input type="number" name="stock" value={formData.stock} onChange={handleChange} className="w-full p-2 border rounded" required />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Pilih Vendor</label>
+              <select name="vendor_id" value={formData.vendor_id} onChange={handleChange} className="w-full p-2 border rounded" required>
+                <option value="">Pilih Vendor</option>
+                {vendors.map((vendor) => (
+                  <option key={vendor.vendor_id} value={vendor.vendor_id}>{vendor.vendor_name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Gambar Obat</label>
+              <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
+              <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-[#5abce0] transition text-sm font-semibold w-full md:w-auto border-2 border-[#69CBF4] flex items-center justify-center space-x-2" onClick={handleButtonClick} type="button">
+                <span>Pilih Gambar</span>
+              </button>
+              {imageUrl && (
+                <img src={imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />
+              )}
+            </div>
+
+            <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 transition duration-200" disabled={loading}>
               {loading ? "Menambahkan..." : "Tambah Obat"}
             </button>
           </form>
         </div>
-          {success && (
-              <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
-                Obat berhasil ditambahkan!
-              </div>
-          )}
-        {/* Tombol Kembali di kanan bawah dan di luar card */}
-        <button
-          onClick={() => router.push("/obat")}
-          className="absolute -bottom-16 right-0 bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition duration-200"
-        >
+
+        {success && (
+          <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-green-500 text-white px-6 py-3 rounded shadow-lg transition-opacity duration-500 ease-in-out opacity-100">
+            Obat berhasil ditambahkan!
+          </div>
+        )}
+
+        <button onClick={() => router.push("/obat")} className="absolute -bottom-16 right-0 bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition duration-200">
           Kembali
         </button>
       </div>

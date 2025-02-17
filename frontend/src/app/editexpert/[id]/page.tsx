@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect,useRef } from "react";
 import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
@@ -8,34 +8,46 @@ import { FishExpert } from "@/types/fishexpert";
 
 const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
   const [expert, setExpert] = useState<FishExpert | null>(null);
-  const [formData, setFormData] = useState<FishExpert | null>(null);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone_number: "",
+    specialization: "",
+    experience: "",
+    image_url: "",
+  });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
+  const [imageUrl, setImageUrl] = useState<string>(""); // Menyimpan URL gambar yang diupload
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const { id } = params;
 
   useEffect(() => {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    if (id) {
       const fetchExpertDetail = async () => {
         try {
           const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`);
-          const expertData: FishExpert = await response.json();
-          setExpert(expertData);
-          setFormData(expertData);
+          const data = await response.json();
+          setFormData({
+            name: data.name,
+            email: data.email,
+            phone_number: data.phone_number,
+            specialization: data.specialization,
+            experience : data.experience,
+            image_url: data.image_url,
+          });
+          setImageUrl(data.image_url);
         } catch (error) {
           console.error("Error fetching expert detail:", error);
         }
       };
       fetchExpertDetail();
-    }
   }, [id]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    if (formData) {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -43,16 +55,27 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
     setLoading(true);
     setSuccess(false);
     setError("");
+    if (!formData.name || !formData.email || !formData.phone_number || !formData.specialization || !formData.experience) {
+      setError("Semua field harus diisi.");
+      setLoading(false);
+      return;
+    }
 
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    if (formData) {
+    let body: any = { ...formData };
+
+    if (imageUrl && imageUrl.startsWith("/uploads")) {
+      body.image_url = imageUrl;  // Menggunakan gambar baru
+    }
+    
+    console.log("Data yang akan dikirim ke server:", body);
+    
       try {
         const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formData),
+          body: JSON.stringify(body),
         });
 
         if (!response.ok) {
@@ -68,6 +91,38 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
       } finally {
         setLoading(false);
       }
+  };
+
+  const handleButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+  
+    const formData = new FormData();
+    formData.append("files", file);
+  
+    try {
+      const response = await fetch(`${API_BASE_URL}/upload`, {
+        method: "POST",
+        body: formData,  // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
+      });
+  
+      const result = await response.json();
+      console.log("Hasil unggahan gambar:", result);
+  
+      if (response.ok) {
+        setImageUrl(result.filePath); // Menggunakan path relatif
+      } else {
+        alert("Upload gagal: " + result.message);
+      }
+    } catch (error) {
+      console.error("Error saat mengupload:", error);
+      alert("Terjadi kesalahan saat mengupload.");
     }
   };
 
@@ -144,6 +199,25 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
               required
             />
           </div>
+
+          <div>
+              <label className="block text-gray-700">Photo Profile Expert</label>
+              <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
+              <button
+                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-[#5abce0] transition text-sm font-semibold w-full md:w-auto border-2 border-[#69CBF4] flex items-center justify-center space-x-2"
+                onClick={handleButtonClick}
+                type="button"
+              >
+                <span>Pilih Gambar</span>
+              </button>
+              {imageUrl && (
+                <img
+                  src={`${API_BASE_URL}${imageUrl}`}
+                  alt="Preview"
+                  className="mt-2 w-32 h-32 object-cover rounded"
+                />
+              )}
+            </div>
 
           <button
             type="submit"

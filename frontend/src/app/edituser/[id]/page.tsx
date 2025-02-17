@@ -75,10 +75,6 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
     }
   };
 
-  if (!user) {
-    return <div>Loading...</div>;
-  }
-
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Edit User" />
@@ -114,16 +110,14 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
           </div>
 
           <div>
-            <label className="block text-gray-700">Role</label>
-            <select
-              name="role"
-              value={formData?.role || "user"}
+            <label className="block text-gray-700">Nomor Telepon</label>
+            <input
+              type="phone_number"
+              name="phone_number"
+              value={formData?.phone_number || ""}
               onChange={handleChange}
               className="w-full p-2 border rounded"
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
+            />
           </div>
 
           <div>
@@ -135,6 +129,19 @@ const EditUserPage = ({ params }: { params: { id: string } }) => {
               onChange={handleChange}
               className="w-full p-2 border rounded"
             />
+          </div>
+
+          <div>
+            <label className="block text-gray-700">Role</label>
+            <select
+              name="role"
+              value={formData?.role || "user"}
+              onChange={handleChange}
+              className="w-full p-2 border rounded"
+            >
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
           </div>
 
           <button

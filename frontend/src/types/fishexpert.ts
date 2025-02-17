@@ -6,5 +6,6 @@ export interface FishExpert {
     experience: string;
     email: string;
     role: string;
+    image_url: string;
   }
   

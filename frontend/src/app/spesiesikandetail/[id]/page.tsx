@@ -12,9 +12,9 @@ const SpesiesIkanDetailPage = () => {
   const [fish, setFish] = useState<FishType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const fetchFishDetail = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/fish-types/${id}`);
@@ -27,7 +27,7 @@ const SpesiesIkanDetailPage = () => {
       } finally {
         setLoading(false);
       }
-    };
+    };  
 
     if (id) fetchFishDetail();
   }, [id]);
@@ -52,7 +52,7 @@ const SpesiesIkanDetailPage = () => {
             <div className="mt-4 flex justify-center">
               {fish.image ? (
                 <img
-                  src={fish.image}
+                  src={`${API_BASE_URL}${fish.image}`}
                   alt={fish.name}
                   className="rounded-lg object-cover w-full max-h-[300px] border"
                 />

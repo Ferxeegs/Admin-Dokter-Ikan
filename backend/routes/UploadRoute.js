@@ -1,10 +1,10 @@
-import express from "express";
-import { upload, uploadFiles, getFiles, deleteFile } from "../controllers/UploadController.js";
+import express from 'express';
+import { uploadFiles, getFiles, deleteFile, uploadFilesController } from '../controllers/UploadController.js';
 
 const router = express.Router();
 
-router.post('/upload', upload.single('image'), uploadFiles);
-router.get("/uploads", getFiles);
-router.delete("/delete-file", deleteFile);
+router.post('/upload', uploadFiles, uploadFilesController);
+router.get('/uploads', getFiles);
+router.delete('/delete-file', deleteFile);
 
 export default router;

@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 export const createUser = async (req, res) => {
   try {
-    const { name, email, password, address, role } = req.body;
+    const { name, email, password, phone_number, address, role } = req.body;
 
     console.log("Registrasi attempt:", email);
 
@@ -27,6 +27,7 @@ export const createUser = async (req, res) => {
       name,
       email,
       password: hashedPassword, // Menyimpan password yang sudah di-hash
+      phone_number,
       address,
       role,
     });
@@ -137,9 +138,9 @@ export const updateUser = async (req, res) => {
       return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
     }
 
-    const { name, email, address, role } = req.body; // Hapus password dari destructuring
+    const { name, email, phone_number, address, role } = req.body; // Hapus password dari destructuring
     
-    await user.update({ name, email, address, role });
+    await user.update({ name, email,phone_number, address, role });
 
     res.status(200).json({ message: 'Pengguna berhasil diperbarui', user });
   } catch (error) {
@@ -178,6 +179,7 @@ export const getMe = async (req, res) => {
       id: user.user_id,
       name: user.name,
       email: user.email,
+      phone_number: user.phone_number,
       address: user.address,
       role: user.role, // Role tetap ada jika dibutuhkan
     });

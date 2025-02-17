@@ -35,6 +35,19 @@ const Payment = db.define('Payment', {
     type: DataTypes.STRING,
     defaultValue: "pending",
     allowNull: false
+  },
+  shipping_fee: { // Kolom shipping_fee yang baru ditambahkan
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0 // default value sesuai dengan perintah SQL
+  },
+  payment_method: { // Kolom payment_method yang baru ditambahkan
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  payment_proof: { // Kolom payment_proof yang baru ditambahkan
+    type: DataTypes.STRING(255),
+    allowNull: true
   }
 }, {
   tableName: 'payment',

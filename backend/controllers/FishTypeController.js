@@ -35,27 +35,55 @@ export const createFishType = async (req, res) => {
 };
 
 // Fungsi untuk memperbarui data Fish Type
+// controllers/uploadController.js
+export const uploadFile = (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'File tidak ditemukan.' });
+  }
+  // Menggunakan forward slash untuk path
+  const filePath = `/uploads/${req.file.filename}`;
+  res.status(200).json({ filePath });
+};
+
+// Controller untuk memperbarui spesies ikan
 export const updateFishType = async (req, res) => {
   try {
-    const fishType = await FishType.findByPk(req.params.id);
+    const { id } = req.params;
+    const { name, description, habitat, image } = req.body;
+
+    const fishType = await FishType.findByPk(id);
     if (!fishType) {
       return res.status(404).json({ message: "Jenis ikan tidak ditemukan" });
     }
 
-    const { name, description, habitat } = req.body;
-    let imageUrl = fishType.image; // Gunakan gambar lama jika tidak ada yang baru
-
     if (req.file) {
-      imageUrl = `/uploads/${req.file.filename}`; // Path penyimpanan gambar
+      console.log("File yang diunggah:", req.file); // Log ini seharusnya muncul
+      imageUrl = `/uploads/${req.file.filename}`; // Gunakan path relatif yang benar
     }
 
-    await fishType.update({ name, description, habitat, image: imageUrl });
-
-    res.status(200).json({ message: "Jenis ikan berhasil diperbarui", fishType });
+    await fishType.update({
+      name,
+      description,
+      habitat,
+      image
+    });
+    console.log("Fish type setelah update:", fishType); // Log ini seharusnya muncul
+    res.status(200).json({
+      message: "Jenis ikan berhasil diperbarui",
+      fishType: {
+        id: fishType.id,
+        name: fishType.name,
+        description: fishType.description,
+        habitat: fishType.habitat,
+        image: fishType.image,
+      },
+    });
   } catch (error) {
-    res.status(500).json({ message: "Gagal memperbarui jenis ikan", error });
+    console.error("Error updating fish type:", error); // Log ini seharusnya muncul
+    res.status(500).json({ message: "Gagal memperbarui spesies ikan", error });
   }
 };
+
 
 
 // Fungsi untuk menghapus Fish Type

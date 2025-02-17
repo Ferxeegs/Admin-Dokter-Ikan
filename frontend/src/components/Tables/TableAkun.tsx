@@ -94,9 +94,11 @@ return (
       <div className="overflow-x-auto">
         <table className="w-full table-auto">
           <thead>
-            <tr className="bg-gray-200 text-left">
+            <tr className="bg-blue-200 text-left">
               <th className="px-4 py-4 font-medium text-black">Nama</th>
               <th className="px-4 py-4 font-medium text-black">Email</th>
+              <th className="px-4 py-4 font-medium text-black">Nomor Telepon</th>
+              <th className="px-4 py-4 font-medium text-black">Alamat</th>
               <th className="px-4 py-4 font-medium text-black">Role</th>
               <th className="px-4 py-4 font-medium text-black">Action</th>
             </tr>
@@ -106,6 +108,12 @@ return (
               <tr key={user.user_id}>
                 <td className="border-b px-4 py-5">{user.name}</td>
                 <td className="border-b px-4 py-5">{user.email}</td>
+                <td className="border-b px-4 py-5">
+                  {user.phone_number ? user.phone_number : <span className="text-gray-400">-</span>}
+                </td>
+                <td className="border-b px-4 py-5">
+                  {user.address ? user.address : <span className="text-gray-400">-</span>}
+                </td>
                 <td className="border-b px-4 py-5">{user.role}</td>
                 <td className="border-b px-4 py-5">
                   <button className="text-blue-500" onClick={() => router.push(`/edituser/${user.user_id}`)}>Edit</button>

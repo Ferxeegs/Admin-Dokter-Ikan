@@ -4,6 +4,7 @@ export interface Akun {
   email: string;
   password: string;
   role: string;
+  phone_number: string;
   address?: string;  // Pastikan address ada dalam tipe
 }
 

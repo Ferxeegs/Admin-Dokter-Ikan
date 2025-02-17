@@ -14,7 +14,7 @@ import Consultation from "./routes/ConsultationRoute.js";
 import PrescriptionRoutes from './routes/PrescriptionRoute.js';
 import Payment from "./routes/PaymentRoute.js";
 import PrescriptionMedicine from "./routes/PrescriptionMedicineRoute.js";
-
+import UploadRoute from "./routes/UploadRoute.js";
 
 dotenv.config();
 
@@ -37,6 +37,7 @@ app.use(cors({
 }));
 
 app.use(express.json());
+app.use('/uploads', express.static('uploads'));
 
 // Gunakan route
 app.use(UserRoute);
@@ -50,6 +51,7 @@ app.use(Consultation);
 app.use(PrescriptionRoutes);
 app.use(Payment);
 app.use(PrescriptionMedicine);
+app.use(UploadRoute);
 
 app.get('/check-db', async (req, res) => {
     try {

@@ -52,10 +52,18 @@ export const getPaymentById = async (req, res) => {
 // Menambahkan pembayaran baru
 export const createPayment = async (req, res) => {
   try {
-    const { consultation_id, prescription_id, total_fee, payment_status } = req.body;
+    const { 
+      consultation_id, 
+      prescription_id, 
+      total_fee, 
+      payment_status, 
+      shipping_fee, 
+      payment_method, 
+      payment_proof 
+    } = req.body;
 
     // Validasi input
-    if (!consultation_id || !prescription_id || !total_fee) {
+    if (!consultation_id || !prescription_id || !total_fee || !shipping_fee || !payment_method) {
       return res.status(400).json({ message: 'Harap isi semua data yang diperlukan' });
     }
 
@@ -63,7 +71,10 @@ export const createPayment = async (req, res) => {
       consultation_id,
       prescription_id,
       total_fee,
-      payment_status: payment_status || 'pending' // Default pending jika tidak diisi
+      payment_status: payment_status || 'pending', // Default pending jika tidak diisi
+      shipping_fee,
+      payment_method,
+      payment_proof // Dibiarkan null jika tidak diisi
     });
 
     res.status(201).json({ message: 'Pembayaran berhasil ditambahkan', data: newPayment });
@@ -75,7 +86,13 @@ export const createPayment = async (req, res) => {
 // Memperbarui pembayaran
 export const updatePayment = async (req, res) => {
   try {
-    const { payment_status } = req.body;
+    const { 
+      payment_status, 
+      shipping_fee, 
+      payment_method, 
+      payment_proof 
+    } = req.body;
+
     const payment = await Payment.findByPk(req.params.id);
 
     if (!payment) {
@@ -86,7 +103,12 @@ export const updatePayment = async (req, res) => {
       return res.status(400).json({ message: 'Status pembayaran tidak valid' });
     }
 
-    await payment.update({ payment_status });
+    await payment.update({
+      payment_status,
+      shipping_fee, 
+      payment_method, 
+      payment_proof
+    });
 
     res.status(200).json({ message: 'Data pembayaran berhasil diperbarui', data: payment });
   } catch (error) {
@@ -94,7 +116,7 @@ export const updatePayment = async (req, res) => {
   }
 };
 
-
+// Mendapatkan pembayaran berdasarkan consultation_id
 export const getPaymentByConsultationId = async (req, res) => {
   try {
     const { consultation_id } = req.query;

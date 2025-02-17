@@ -10,21 +10,21 @@ const FishExpertDetailPage = ({ params }: { params: { id: string } }) => {
   const [expert, setExpert] = useState<FishExpert | null>(null);
   const router = useRouter();
   const { id } = params;
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    if (id) {
       const fetchExpertDetail = async () => {
         try {
           const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`);
+
           const expertData: FishExpert = await response.json();
           setExpert(expertData);
         } catch (error) {
           console.error("Error fetching expert detail:", error);
         }
       };
+
       fetchExpertDetail();
-    }
   }, [id]);
 
   if (!expert) {
@@ -45,6 +45,19 @@ const FishExpertDetailPage = ({ params }: { params: { id: string } }) => {
           <p><strong>Spesialisasi:</strong> {expert.specialization}</p>
           <p><strong>Pengalaman:</strong> {expert.experience}</p>
           <p><strong>Role:</strong> {expert.role}</p>
+          <div className="mt-4 flex justify-center">
+              {expert.image_url ? (
+                <img
+                  src={`${API_BASE_URL}${expert.image_url}`}
+                  alt={expert.name}
+                  className="rounded-lg object-cover w-full max-h-[300px] border"
+                />
+              ) : (
+                <div className="w-full max-h-[300px] flex items-center justify-center bg-gray-200 rounded-lg">
+                  <p className="text-gray-500">Tidak ada gambar</p>
+                </div>
+              )}
+            </div>
         </div>
       </div>
 
