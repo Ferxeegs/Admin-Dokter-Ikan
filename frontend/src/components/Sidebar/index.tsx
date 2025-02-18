@@ -104,6 +104,18 @@ const menuGroups = [
         icon: (
           <img
             className="fill-current"
+            src="/images/icon/Article.png"
+            alt="Article Icon"
+            width={30}
+          />
+        ),
+        label: "Artikel",
+        route: "/article",
+      },
+      {
+        icon: (
+          <img
+            className="fill-current"
             src="/images/icon/Profil.png"
             alt="Profil Icon"
             width={30}

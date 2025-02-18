@@ -15,6 +15,7 @@ import PrescriptionRoutes from './routes/PrescriptionRoute.js';
 import Payment from "./routes/PaymentRoute.js";
 import PrescriptionMedicine from "./routes/PrescriptionMedicineRoute.js";
 import UploadRoute from "./routes/UploadRoute.js";
+import ArticleRoute from "./routes/ArticleRoute.js"
 
 dotenv.config();
 
@@ -52,6 +53,7 @@ app.use(PrescriptionRoutes);
 app.use(Payment);
 app.use(PrescriptionMedicine);
 app.use(UploadRoute);
+app.use(ArticleRoute);
 
 app.get('/check-db', async (req, res) => {
     try {
