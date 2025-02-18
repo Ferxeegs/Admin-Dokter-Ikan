@@ -45,6 +45,8 @@ const ArticleDetailPage = () => {
         {article ? (
           <div>
             <h3 className="text-xl font-semibold">{article.title}</h3>
+            <p className="mt-2"><strong>Author:</strong> {article.author}</p>
+            <p className="mt-2"><strong>Kategori:</strong> {article.category}</p>
             <p className="mt-2"><strong>Deskripsi:</strong> {article.description}</p>
             <p className="mt-2"><strong>Author:</strong> {article.author}</p>
             <div className="mt-4">

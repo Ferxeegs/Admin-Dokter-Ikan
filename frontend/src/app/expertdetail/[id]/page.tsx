@@ -41,7 +41,7 @@ const FishExpertDetailPage = ({ params }: { params: { id: string } }) => {
         <div>
           <p><strong>Nama:</strong> {expert.name}</p>
           <p><strong>Email:</strong> {expert.email}</p>
-          <p><strong>Phone:</strong> {expert.phone_number}</p>
+          <p><strong>Nomor Telepon:</strong> {expert.phone_number}</p>
           <p><strong>Spesialisasi:</strong> {expert.specialization}</p>
           <p><strong>Pengalaman:</strong> {expert.experience}</p>
           <p><strong>Role:</strong> {expert.role}</p>

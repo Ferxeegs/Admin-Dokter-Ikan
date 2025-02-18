@@ -129,7 +129,7 @@ const EditVendorObatPage = ({ params }: { params: { id: string } }) => {
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
             disabled={loading}
           >
-            {loading ? "Memperbarui..." : "Update Vendor Obat"}
+            {loading ? "Memperbarui..." : "Perbarui Vendor Obat"}
           </button>
         </form>
       </div>

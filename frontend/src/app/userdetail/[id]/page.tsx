@@ -41,8 +41,9 @@ const UserDetailPage = ({ params }: { params: { id: string } }) => {
         <div>
           <p><strong>Nama:</strong> {user.name}</p>
           <p><strong>Email:</strong> {user.email}</p>
-          <p><strong>Role:</strong> {user.role}</p>
+          <p><strong>Nomor Telepon:</strong> {user.phone_number}</p>
           <p><strong>Alamat:</strong> {user.address || "Tidak ada alamat"}</p>
+          <p><strong>Role:</strong> {user.role}</p>     
         </div>
       </div>
 

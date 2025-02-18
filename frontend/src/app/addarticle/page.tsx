@@ -11,6 +11,7 @@ const AddArticle = () => {
   const [formData, setFormData] = useState({
     author: "",
     title: "",
+    category: "",
     description: "",
     url: "",
     urltoimage: "",
@@ -128,6 +129,11 @@ const AddArticle = () => {
             <div>
               <label className="block text-gray-700">Judul Artikel</label>
               <input type="text" name="title" value={formData.title} onChange={handleChange} className="w-full p-2 border rounded" required />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Kategori</label>
+              <input type="text" name="category" value={formData.category} onChange={handleChange} className="w-full p-2 border rounded" required />
             </div>
 
             <div>

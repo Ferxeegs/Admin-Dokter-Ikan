@@ -116,7 +116,7 @@ const TableArticle = () => {
                   <td className="border-b px-4 py-5">
                     <button
                       className="ml-4 text-blue-500"
-                      onClick={() => router.push(`/editarti/${article.article_id}`)}
+                      onClick={() => router.push(`/editarticle/${article.article_id}`)}
                     >
                       Edit
                     </button>

@@ -9,11 +9,13 @@ const EditArticle = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const { id } = params;
   const [formData, setFormData] = useState({
+    author: "",
     title: "",
+    category: "",
     description: "",
-    contents: "",
     url: "",
     urltoimage: "",
+    contents: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -31,7 +33,9 @@ const EditArticle = ({ params }: { params: { id: string } }) => {
         const data = await response.json();
         console.log("Data dari API:", data); // Tambahkan log ini
         setFormData({
+          author: data.author,
           title: data.title,
+          category: data.category,
           description: data.description,
           contents: data.contents,
           url: data.url,
@@ -139,6 +143,18 @@ const EditArticle = ({ params }: { params: { id: string } }) => {
           {error && <p className="text-red-500">{error}</p>}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+              <label className="block text-gray-700">Nama Author</label>
+              <input
+                type="text"
+                name="author"
+                value={formData.author}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
+                required
+              />
+            </div>
+          
             <div>
               <label className="block text-gray-700">Judul Artikel</label>
               <input
@@ -148,6 +164,17 @@ const EditArticle = ({ params }: { params: { id: string } }) => {
                 onChange={handleChange}
                 className="w-full p-2 border rounded"
                 required
+              />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Kategori</label>
+              <input
+                type="text"
+                name="category"
+                value={formData.category}
+                onChange={handleChange}
+                className="w-full p-2 border rounded"
               />
             </div>
 
