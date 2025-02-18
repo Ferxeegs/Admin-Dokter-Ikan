@@ -90,7 +90,8 @@ export const updatePayment = async (req, res) => {
       payment_status, 
       shipping_fee, 
       payment_method, 
-      payment_proof 
+      payment_proof,
+      total_fee,
     } = req.body;
 
     const payment = await Payment.findByPk(req.params.id);
@@ -99,15 +100,17 @@ export const updatePayment = async (req, res) => {
       return res.status(404).json({ message: 'Data pembayaran tidak ditemukan' });
     }
 
-    if (!['pending', 'selesai'].includes(payment_status)) {
-      return res.status(400).json({ message: 'Status pembayaran tidak valid' });
+    // Validasi shipping_fee jika perlu
+    if (shipping_fee != null && isNaN(shipping_fee)) {
+      return res.status(400).json({ message: 'Ongkir harus berupa angka yang valid' });
     }
 
     await payment.update({
-      payment_status,
+      payment_status,    // Hanya perlu update status jika ada perubahan
       shipping_fee, 
       payment_method, 
-      payment_proof
+      payment_proof,
+      total_fee,
     });
 
     res.status(200).json({ message: 'Data pembayaran berhasil diperbarui', data: payment });
@@ -115,6 +118,7 @@ export const updatePayment = async (req, res) => {
     res.status(500).json({ message: 'Gagal memperbarui data pembayaran', error: error.message });
   }
 };
+
 
 // Mendapatkan pembayaran berdasarkan consultation_id
 export const getPaymentByConsultationId = async (req, res) => {

@@ -11,10 +11,12 @@ const TableObat = () => {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [popupMessage, setPopupMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedMedicine, setSelectedMedicine] = useState<Medicine | null>(null);
   const router = useRouter();
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const fetchData = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/medicines`);
@@ -34,13 +36,11 @@ const TableObat = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async () => {
+    if (!selectedMedicine) return;
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const confirmDelete = confirm("Apakah Anda yakin ingin menghapus obat ini?");
-    if (!confirmDelete) return;
-
     try {
-      const response = await fetch(`${API_BASE_URL}/medicines/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/medicines/${selectedMedicine.medicine_id}`, {
         method: "DELETE",
       });
 
@@ -49,11 +49,16 @@ const TableObat = () => {
       }
       setPopupMessage("Obat berhasil dihapus!");
       setTimeout(() => setPopupMessage(""), 2000);
-      const updatedMedicines = medicines.filter((medicine) => medicine.medicine_id !== id);
+      const updatedMedicines = medicines.filter(
+        (medicine) => medicine.medicine_id !== selectedMedicine.medicine_id
+      );
       setMedicines(updatedMedicines);
       setFilteredMedicines(updatedMedicines);
     } catch (error) {
       console.error("Error deleting medicine:", error);
+    } finally {
+      setShowModal(false);
+      setSelectedMedicine(null);
     }
   };
 
@@ -121,12 +126,11 @@ const TableObat = () => {
                       onClick={() => router.push(`/obatdetail/${medicine.medicine_id}`)}
                     >
                       Detail
-                    </button>
-                    <button
-                      className="ml-4 text-red-500"
-                      onClick={() => handleDelete(medicine.medicine_id)}
-                    >
-                      Hapus
+                    </button>                   
+                    <button 
+                        className="ml-4 text-red-500" 
+                        onClick={() => { setSelectedMedicine(medicine); setShowModal(true); }}>
+                        Hapus
                     </button>
                   </td>
                 </tr>
@@ -142,6 +146,18 @@ const TableObat = () => {
           </table>
         )}
       </div>
+        {showModal && (
+          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white p-6 rounded shadow-md w-96 text-center">
+              <h3 className="text-lg font-semibold mb-4">Konfirmasi Hapus</h3>
+              <p className="mb-4">Apakah Anda yakin ingin menghapus obat ini?</p>
+              <div className="flex justify-center gap-4">
+                <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
+                <button onClick={() => setShowModal(false)} className="bg-gray-300 px-4 py-2 rounded">Batal</button>
+              </div>
+            </div>
+          </div>
+        )}
     </div>
   );
 };

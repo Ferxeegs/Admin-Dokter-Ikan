@@ -11,10 +11,13 @@ const TableAkun = () => {
   const [searchUser, setSearchUser] = useState("");
   const [searchExpert, setSearchExpert] = useState("");
   const [popupMessage, setPopupMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: number; type: "user" | "expert" } | null>(null);
   const itemsPerPage = 5;
   const [currentPageUser, setCurrentPageUser] = useState(1);
   const [currentPageExpert, setCurrentPageExpert] = useState(1);
   const router = useRouter();
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
     fetchData();
@@ -44,16 +47,15 @@ const TableAkun = () => {
   const currentUsers = filteredUsers.slice((currentPageUser - 1) * itemsPerPage, currentPageUser * itemsPerPage);
   const currentExperts = filteredExperts.slice((currentPageExpert - 1) * itemsPerPage, currentPageExpert * itemsPerPage);
 
-  const handleDelete = async (id: number, type: "user" | "expert") => {
-    const endpoint = type === "user" ? `users/${id}` : `fishexperts/${id}`;
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    // Menampilkan layar konfirmasi
-    const userConfirmed = window.confirm("Apakah Anda yakin ingin menghapus data ini?");
-    if (!userConfirmed) {
-        router.push("/akun");
-        return;
-    }
-    
+  const handleDeleteConfirm = (id: number, type: "user" | "expert") => {
+    setDeleteTarget({ id, type });
+    setShowModal(true);
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    const { id, type } = deleteTarget;
+    const endpoint = type === "user" ? `users/${id}` : `fishexperts/${id}`; 
     try {
         const response = await fetch(`${API_BASE_URL}/${endpoint}`, {
             method: "DELETE",
@@ -69,12 +71,26 @@ const TableAkun = () => {
     } catch (error) {
         console.error("Error deleting data:", error);
     }
+    setShowModal(false);
 };
 
 
 return (
   <div className="flex flex-col gap-10">
     {/* Tabel User */}
+
+    {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-md w-96 text-center">
+            <h3 className="text-lg font-semibold mb-4">Konfirmasi Hapus</h3>
+            <p className="mb-4">Apakah Anda yakin ingin menghapus data ini?</p>
+            <div className="flex justify-center gap-4">
+              <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
+              <button onClick={() => setShowModal(false)} className="bg-gray-300 px-4 py-2 rounded">Batal</button>
+            </div>
+          </div>
+        </div>
+      )}
     {popupMessage && (
       <div className="fixed top-20 left-1/2 transform -translate-x-1/2 bg-red-500 text-white px-6 py-3 rounded shadow-lg">
         <p className="text-lg font-semibold">{popupMessage}</p>
@@ -117,8 +133,8 @@ return (
                 <td className="border-b px-4 py-5">{user.role}</td>
                 <td className="border-b px-4 py-5">
                   <button className="text-blue-500" onClick={() => router.push(`/edituser/${user.user_id}`)}>Edit</button>
-                  <button className="ml-4 text-green-500" onClick={() => router.push(`/userdetail/${user.user_id}`)}>Detail</button>
-                  <button className="ml-4 text-red-500" onClick={() => handleDelete(user.user_id, "user")}>Hapus</button>
+                  <button className="ml-4 text-green-500" onClick={() => router.push(`/userdetail/${user.user_id}`)}>Detail</button>               
+                  <button className="ml-4 text-red-500" onClick={() => handleDeleteConfirm(user.user_id, "user")}>Hapus</button>
                 </td>
               </tr>
             ))}
@@ -149,6 +165,18 @@ return (
     </div>
 
     {/* Tabel Expert */}
+    {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-md w-96 text-center">
+            <h3 className="text-lg font-semibold mb-4">Konfirmasi Hapus</h3>
+            <p className="mb-4">Apakah Anda yakin ingin menghapus data ini?</p>
+            <div className="flex justify-center gap-4">
+              <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
+              <button onClick={() => setShowModal(false)} className="bg-gray-300 px-4 py-2 rounded">Batal</button>
+            </div>
+          </div>
+        </div>
+      )}
     <div className="rounded-lg border border-stroke bg-white p-5 shadow-md">
       <h2 className="text-lg font-semibold text-black mb-4">Daftar Expert</h2>
       <input
@@ -179,7 +207,7 @@ return (
                 <td className="border-b px-4 py-5">
                   <button className="text-blue-500" onClick={() => router.push(`/editexpert/${expert.fishExperts_id}`)}>Edit</button>
                   <button className="ml-4 text-green-500" onClick={() => router.push(`/expertdetail/${expert.fishExperts_id}`)}>Detail</button>
-                  <button className="ml-4 text-red-500" onClick={() => handleDelete(expert.fishExperts_id, "expert")}>Hapus</button>
+                  <button className="ml-4 text-red-500" onClick={() => handleDeleteConfirm(expert.fishExperts_id, "expert")}>Hapus</button>
                 </td>
               </tr>
             ))}

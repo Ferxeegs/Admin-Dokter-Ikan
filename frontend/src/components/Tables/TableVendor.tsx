@@ -11,11 +11,13 @@ const TableVendor = () => {
   const [popupMessage, setPopupMessage] = useState("");
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedVendorId, setSelectedVendorId] = useState<number | null>(null);
   const router = useRouter();
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    const fetchData = async () => {
-      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+    const fetchData = async () => {  
       try {
         const response = await fetch(`${API_BASE_URL}/vendors`);
         if (!response.ok) {
@@ -34,13 +36,12 @@ const TableVendor = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async () => {
+    if (!selectedVendorId) return;
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const confirmDelete = confirm("Apakah Anda yakin ingin menghapus vendor ini?");
-    if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/vendors/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/vendors/${selectedVendorId}`, {
         method: "DELETE",
       });
 
@@ -48,12 +49,15 @@ const TableVendor = () => {
         throw new Error("Gagal menghapus data vendor");
       }
       setPopupMessage("Vendor berhasil dihapus!");
-        setTimeout(() => setPopupMessage(""), 2000);
-      const updatedVendors = vendors.filter((vendor) => vendor.vendor_id !== id);
+      setTimeout(() => setPopupMessage(""), 2000);
+      const updatedVendors = vendors.filter((vendor) => vendor.vendor_id !== selectedVendorId);
       setVendors(updatedVendors);
       setFilteredVendors(updatedVendors);
     } catch (error) {
       console.error("Error deleting vendor:", error);
+    } finally {
+      setModalOpen(false);
+      setSelectedVendorId(null);
     }
   };
 
@@ -114,7 +118,10 @@ const TableVendor = () => {
                     </button>
                     <button
                       className="ml-4 text-red-500"
-                      onClick={() => handleDelete(vendor.vendor_id)}
+                      onClick={() => {
+                        setSelectedVendorId(vendor.vendor_id);
+                        setModalOpen(true);
+                      }}
                     >
                       Hapus
                     </button>
@@ -132,6 +139,18 @@ const TableVendor = () => {
           </table>
         )}
       </div>
+      {modalOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-md w-96 text-center">
+            <h3 className="text-lg font-semibold mb-4">Konfirmasi Hapus</h3>
+            <p className="mb-4">Apakah Anda yakin ingin menghapus vendor obat ini?</p>
+            <div className="flex justify-center gap-4">
+              <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
+              <button onClick={() => setModalOpen(false)} className="bg-gray-300 px-4 py-2 rounded">Batal</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

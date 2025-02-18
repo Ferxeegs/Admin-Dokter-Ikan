@@ -10,10 +10,12 @@ const TableSpesiesIkan = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [popupMessage, setPopupMessage] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [selectedFishId, setSelectedFishId] = useState<number | null>(null);
   const router = useRouter();
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   useEffect(() => {
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     const fetchData = async () => {
       try {
         const response = await fetch(`${API_BASE_URL}/fish-types`);
@@ -32,24 +34,25 @@ const TableSpesiesIkan = () => {
     fetchData();
   }, []);
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async () => {
+    if (!selectedFishId) return;
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-    const confirmDelete = confirm("Apakah Anda yakin ingin menghapus spesies ini?");
-    if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/fish-types/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/fish-types/${selectedFishId}`, {
         method: "DELETE",
       });
-
       if (!response.ok) {
         throw new Error("Gagal menghapus data");
       }
-        setPopupMessage("Spesies Ikan berhasil dihapus!");
-        setTimeout(() => setPopupMessage(""), 2000);
-      setFishTypes(fishTypes.filter((fish) => fish.fish_type_id !== id));
+      setPopupMessage("Spesies Ikan berhasil dihapus!");
+      setTimeout(() => setPopupMessage(""), 2000);
+      setFishTypes(fishTypes.filter((fish) => fish.fish_type_id !== selectedFishId));
     } catch (error) {
       console.error("Error deleting fish type:", error);
+    } finally {
+      setShowModal(false);
+      setSelectedFishId(null);
     }
   };
 
@@ -113,7 +116,10 @@ const TableSpesiesIkan = () => {
                       </button>
                       <button
                         className="ml-4 text-red-500"
-                        onClick={() => handleDelete(fish.fish_type_id)}
+                        onClick={() => {
+                          setShowModal(true);
+                          setSelectedFishId(fish.fish_type_id);
+                        }}
                       >
                         Hapus
                       </button>
@@ -131,6 +137,18 @@ const TableSpesiesIkan = () => {
           </table>
         )}
       </div>
+      {showModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded shadow-md w-96 text-center">
+            <h3 className="text-lg font-semibold mb-4">Konfirmasi Hapus</h3>
+            <p className="mb-4">Apakah Anda yakin ingin menghapus spesies ini?</p>
+            <div className="flex justify-center gap-4">
+              <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded">Hapus</button>
+              <button onClick={() => setShowModal(false)} className="bg-gray-300 px-4 py-2 rounded">Batal</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
