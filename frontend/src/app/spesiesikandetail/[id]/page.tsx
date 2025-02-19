@@ -45,6 +45,8 @@ const SpesiesIkanDetailPage = () => {
         {fish ? (
           <div>
             <p><strong>Nama:</strong> {fish.name}</p>
+            <p><strong>Nama Lain:</strong> {fish.other_name}</p>
+            <p><strong>Nama Latin:</strong> <em>{fish.latin_name}</em></p>
             <p><strong>Deskripsi:</strong> {fish.description}</p>
             <p><strong>Habitat:</strong> {fish.habitat}</p>
 

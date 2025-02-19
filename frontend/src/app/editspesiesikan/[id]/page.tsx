@@ -10,6 +10,8 @@ const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   const [formData, setFormData] = useState({
     name: "",
+    other_name: "",
+    latin_name: "",
     description: "",
     habitat: "",
     image: "",
@@ -31,6 +33,8 @@ const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
         console.log("Data dari API:", data); // Tambahkan log ini
         setFormData({
           name: data.name,
+          other_name: data.other_name,
+          latin_name: data.latin_name,
           description: data.description,
           habitat: data.habitat,
           image: data.image,
@@ -141,6 +145,16 @@ const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
             <div>
               <label className="block text-gray-700">Nama Ikan</label>
               <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full p-2 border rounded" required />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Nama Lain Ikan</label>
+              <input type="text" name="other_name" value={formData.other_name} onChange={handleChange} className="w-full p-2 border rounded" required />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Nama Latin Ikan</label>
+              <input type="text" name="latin_name" value={formData.latin_name} onChange={handleChange} className="w-full p-2 border rounded" required />
             </div>
 
             <div>

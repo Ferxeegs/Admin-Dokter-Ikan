@@ -9,6 +9,8 @@ const AddSpesiesIkan = () => {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
+    other_name: "",
+    latin_name: "",
     description: "",
     habitat: "",
     image: "",
@@ -108,6 +110,16 @@ const AddSpesiesIkan = () => {
             <div>
               <label className="block text-gray-700">Nama Ikan</label>
               <input type="text" name="name" value={formData.name} onChange={handleChange} className="w-full p-2 border rounded" required />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Nama Lain Ikan</label>
+              <input type="text" name="other_name" value={formData.other_name} onChange={handleChange} className="w-full p-2 border rounded" required />
+            </div>
+
+            <div>
+              <label className="block text-gray-700">Nama Latin Ikan</label>
+              <input type="text" name="latin_name" value={formData.latin_name} onChange={handleChange} className="w-full p-2 border rounded" required />
             </div>
 
             <div>

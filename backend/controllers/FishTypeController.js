@@ -49,7 +49,7 @@ export const uploadFile = (req, res) => {
 export const updateFishType = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, description, habitat, image } = req.body;
+    const { name, other_name, latin_name, description, habitat, image } = req.body;
 
     const fishType = await FishType.findByPk(id);
     if (!fishType) {
@@ -63,16 +63,20 @@ export const updateFishType = async (req, res) => {
 
     await fishType.update({
       name,
+      other_name, 
+      latin_name,
       description,
       habitat,
       image
     });
-    console.log("Fish type setelah update:", fishType); // Log ini seharusnya muncul
+    // console.log("Fish type setelah update:", fishType); // Log ini seharusnya muncul
     res.status(200).json({
       message: "Jenis ikan berhasil diperbarui",
       fishType: {
         id: fishType.id,
         name: fishType.name,
+        other_name : fishType.other_name, 
+        latin_name : fishType.latin_name,
         description: fishType.description,
         habitat: fishType.habitat,
         image: fishType.image,
