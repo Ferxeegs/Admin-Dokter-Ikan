@@ -32,11 +32,10 @@ const TableSpesiesIkan = () => {
     };
 
     fetchData();
-  }, []);
+  }, [API_BASE_URL]);
 
   const handleDelete = async () => {
     if (!selectedFishId) return;
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
     try {
       const response = await fetch(`${API_BASE_URL}/fish-types/${selectedFishId}`, {

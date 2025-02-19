@@ -34,11 +34,10 @@ const TableObat = () => {
     };
 
     fetchData();
-  }, []);
+  }, [API_BASE_URL]);
 
   const handleDelete = async () => {
     if (!selectedMedicine) return;
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     try {
       const response = await fetch(`${API_BASE_URL}/medicines/${selectedMedicine.medicine_id}`, {
         method: "DELETE",

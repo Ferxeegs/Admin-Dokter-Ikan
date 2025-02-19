@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useRef} from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Image from "next/image";
 
 const AddExpert = () => {
   const router = useRouter();
@@ -180,19 +181,21 @@ const AddExpert = () => {
           </div>
 
           <div>
-              <label className="block text-gray-700">Photo Profile Expert</label>
-              <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
-              <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-[#5abce0] transition text-sm font-semibold w-full md:w-auto border-2 border-[#69CBF4] flex items-center justify-center space-x-2" onClick={handleButtonClick} type="button">
-                <span>Pilih Gambar</span>
-              </button>
-              {imageUrl && (
-                <img
-                  src={imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`} // Pastikan gambar berasal dari API_BASE_URL
-                  alt="Preview"
-                  className="mt-2 w-32 h-32 object-cover rounded"
-                />
-              )}
-            </div>
+            <label className="block text-gray-700">Photo Profile Expert</label>
+            <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
+            <button className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-[#5abce0] transition text-sm font-semibold w-full md:w-auto border-2 border-[#69CBF4] flex items-center justify-center space-x-2" onClick={handleButtonClick} type="button">
+              <span>Pilih Gambar</span>
+            </button>
+            {imageUrl && (
+              <Image
+                src={imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`} // Pastikan gambar berasal dari API_BASE_URL
+                alt="Preview"
+                width={128}
+                height={128}
+                className="mt-2 object-cover rounded"
+              />
+            )}
+          </div>
 
           <button
             type="submit"
@@ -208,7 +211,6 @@ const AddExpert = () => {
           Expert berhasil ditambahkan!
         </div>
       )}
-      
 
       {/* Tombol Kembali di luar Card */}
       <div className="max-w-xl mx-auto flex justify-end mt-4">

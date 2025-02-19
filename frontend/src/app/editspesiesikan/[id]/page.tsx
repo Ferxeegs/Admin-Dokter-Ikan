@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Image from "next/image";
 
 const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
@@ -46,7 +47,7 @@ const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
       }
     };
     fetchFishDetails();
-  }, [id]);
+  }, [id, API_BASE_URL]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -57,16 +58,16 @@ const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
     setLoading(true);
     setError("");
     setSuccess(false);
-  
+
     if (!formData.name || !formData.description || !formData.habitat) {
       setError("Semua field harus diisi.");
       setLoading(false);
       return;
     }
-  
+
     // Jika gambar diubah, kirim gambar dengan form-data
     let body: any = { ...formData };
-    
+
     if (imageUrl && imageUrl.startsWith("/uploads")) {
       body.image = imageUrl;  // Menggunakan gambar baru
     }
@@ -80,11 +81,11 @@ const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
         },
         body: JSON.stringify(body),
       });
-  
+
       if (!response.ok) {
         throw new Error("Gagal memperbarui spesies ikan.");
       }
-  
+
       setSuccess(true);
       setTimeout(() => {
         setSuccess(false);
@@ -96,7 +97,6 @@ const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
       setLoading(false);
     }
   };
-  
 
   const handleButtonClick = () => {
     if (fileInputRef.current) {
@@ -107,19 +107,19 @@ const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
-  
+
     const formData = new FormData();
     formData.append("files", file);
-  
+
     try {
       const response = await fetch(`${API_BASE_URL}/upload`, {
         method: "POST",
         body: formData,  // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
       });
-  
+
       const result = await response.json();
       console.log("Hasil unggahan gambar:", result);
-  
+
       if (response.ok) {
         setImageUrl(result.filePath); // Menggunakan path relatif
       } else {
@@ -130,7 +130,7 @@ const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
       alert("Terjadi kesalahan saat mengupload.");
     }
   };
-  
+
   return (
     <DefaultLayout>
       <Breadcrumb pageName="Edit Spesies Ikan" />
@@ -174,10 +174,12 @@ const EditSpesiesIkan = ({ params }: { params: { id: string } }) => {
                 <span>Pilih Gambar</span>
               </button>
               {imageUrl && (
-                <img
+                <Image
                   src={`${API_BASE_URL}${imageUrl}`}
                   alt="Preview"
-                  className="mt-2 w-32 h-32 object-cover rounded"
+                  width={128}
+                  height={128}
+                  className="mt-2 object-cover rounded"
                 />
               )}
             </div>

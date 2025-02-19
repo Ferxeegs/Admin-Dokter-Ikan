@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Article } from "@/types/article";
+import Image from "next/image";
 
 const ArticleDetailPage = () => {
   const { id } = useParams(); // Ambil ID dari URL
@@ -30,7 +31,7 @@ const ArticleDetailPage = () => {
     };
 
     if (id) fetchArticleDetail();
-  }, [id]);
+  }, [id, API_BASE_URL]);
 
   if (loading) return <div className="text-gray-500 text-center">Memuat data...</div>;
   if (error) return <div className="text-red-500 text-center">{error}</div>;
@@ -61,9 +62,11 @@ const ArticleDetailPage = () => {
             {/* Menampilkan gambar artikel */}
             <div className="mt-4 flex justify-center">
               {article.urltoimage ? (
-                <img
+                <Image
                   src={`${API_BASE_URL}${article.urltoimage}`}
                   alt={article.title}
+                  width={600}
+                  height={300}
                   className="rounded-lg object-cover w-full max-h-[300px] border"
                 />
               ) : (

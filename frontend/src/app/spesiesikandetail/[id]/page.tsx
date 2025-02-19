@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { FishType } from "@/types/fish";
+import Image from "next/image";
 
 const SpesiesIkanDetailPage = () => {
   const { id } = useParams(); // Ambil ID dari URL
@@ -27,10 +28,10 @@ const SpesiesIkanDetailPage = () => {
       } finally {
         setLoading(false);
       }
-    };  
+    };
 
     if (id) fetchFishDetail();
-  }, [id]);
+  }, [id, API_BASE_URL]);
 
   if (loading) return <div className="text-gray-500 text-center">Memuat data...</div>;
   if (error) return <div className="text-red-500 text-center">{error}</div>;
@@ -53,9 +54,11 @@ const SpesiesIkanDetailPage = () => {
             {/* Menampilkan gambar ikan */}
             <div className="mt-4 flex justify-center">
               {fish.image ? (
-                <img
+                <Image
                   src={`${API_BASE_URL}${fish.image}`}
                   alt={fish.name}
+                  width={600}
+                  height={300}
                   className="rounded-lg object-cover w-full max-h-[300px] border"
                 />
               ) : (

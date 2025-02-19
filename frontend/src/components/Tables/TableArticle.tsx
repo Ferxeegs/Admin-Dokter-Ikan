@@ -34,7 +34,7 @@ const TableArticle = () => {
     };
 
     fetchData();
-  }, []);
+  }, [API_BASE_URL]);
 
   const handleDelete = async () => {
     if (!selectedArticle) return;

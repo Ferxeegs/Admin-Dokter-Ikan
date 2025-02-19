@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Article } from "@/types/article";
+import Image from "next/image";
 
 const AddArticle = () => {
   const router = useRouter();
@@ -34,7 +35,7 @@ const AddArticle = () => {
     };
 
     fetchCategories();
-  }, []);
+  }, [API_BASE_URL]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -158,7 +159,7 @@ const AddArticle = () => {
                 <span>Pilih Gambar</span>
               </button>
               {imageUrl && (
-                <img src={imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />
+                <Image src={imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`} alt="Preview" width={128} height={128} className="mt-2 object-cover rounded" />
               )}
             </div>
 

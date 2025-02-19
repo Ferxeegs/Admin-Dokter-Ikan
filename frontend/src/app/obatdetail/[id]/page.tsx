@@ -6,6 +6,7 @@ import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Medicine } from "@/types/medicine";
 import { Vendor } from "@/types/vendor";
+import Image from "next/image";
 
 const ObatDetailPage = () => {
   const { id } = useParams(); // Ambil ID dari URL
@@ -40,7 +41,7 @@ const ObatDetailPage = () => {
     };
 
     if (id) fetchMedicineDetail();
-  }, [id]);
+  }, [id, API_BASE_URL]);
 
   if (loading) return <div className="text-gray-500 text-center">Memuat data...</div>;
   if (error) return <div className="text-red-500 text-center">{error}</div>;
@@ -64,18 +65,20 @@ const ObatDetailPage = () => {
               <p><strong>Stok:</strong> {medicine.stock.toLocaleString()}</p>
               <p><strong>Vendor:</strong> {vendorName}</p>
               <div className="mt-4 flex justify-center">
-              {medicine.medicine_image ? (
-                <img
-                  src={`${API_BASE_URL}${medicine.medicine_image}`}
-                  alt={medicine.medicine_image}
-                  className="rounded-lg object-cover w-full max-h-[300px] border"
-                />
-              ) : (
-                <div className="w-full max-h-[300px] flex items-center justify-center bg-gray-200 rounded-lg">
-                  <p className="text-gray-500">Tidak ada gambar</p>
-                </div>
-              )}
-            </div>
+                {medicine.medicine_image ? (
+                  <Image
+                    src={`${API_BASE_URL}${medicine.medicine_image}`}
+                    alt={medicine.medicine_image}
+                    width={600}
+                    height={300}
+                    className="rounded-lg object-cover w-full max-h-[300px] border"
+                  />
+                ) : (
+                  <div className="w-full max-h-[300px] flex items-center justify-center bg-gray-200 rounded-lg">
+                    <p className="text-gray-500">Tidak ada gambar</p>
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
             <p className="text-gray-500">Data tidak ditemukan.</p>

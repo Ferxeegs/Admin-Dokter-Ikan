@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface User {
   user_id: number;
@@ -92,7 +93,7 @@ const TableTransaksi = () => {
     };
 
     fetchConsultationsAndPayments();
-  }, []);
+  }, [API_BASE_URL]);
 
   const filteredTransactions = transactions.filter((payment) => {
     const user = users.find((u) => u.user_id === payment.Consultation.user_id);
@@ -111,15 +112,15 @@ const TableTransaksi = () => {
 
   const updateStatus = async () => {
     if (!selectedPayment) return;
-  
+
     // Pastikan hanya status "pending" yang bisa diubah ke "selesai"
     if (selectedPayment.payment_status !== "pending") {
       setError("Status pembayaran harus dalam status pending untuk diubah.");
       return;
     }
-  
+
     const newStatus = "selesai";  // Karena sudah dipastikan statusnya "pending"
-  
+
     try {
       const response = await fetch(`${API_BASE_URL}/payments/${selectedPayment.payment_id}`, {
         method: "PATCH",
@@ -128,13 +129,13 @@ const TableTransaksi = () => {
         },
         body: JSON.stringify({ payment_status: newStatus }),
       });
-  
+
       // Cek status response
       if (!response.ok) {
         const result = await response.json();
         throw new Error(`Gagal memperbarui status: ${result.message || 'Unknown error'}`);
       }
-  
+
       // Perbarui state transaksi jika update berhasil
       setTransactions((prevTransactions) =>
         prevTransactions.map((transaction) =>
@@ -143,15 +144,13 @@ const TableTransaksi = () => {
             : transaction
         )
       );
-  
+
       closeModal();
     } catch (error) {
       console.error("Error updating payment status:", error);
       setError("Gagal memperbarui status pembayaran.");
     }
   };
-  
-  
 
   const openShippingModal = (payment: Payment) => {
     setSelectedShippingPayment(payment);
@@ -169,16 +168,16 @@ const TableTransaksi = () => {
   // Simpan biaya ongkir ke database
   const saveShippingFee = async () => {
     if (!selectedShippingPayment || newShippingFee === "") return;
-  
+
     const updatedShippingFee = parseFloat(newShippingFee);
     const updatedTotalFee = selectedShippingPayment.total_fee + updatedShippingFee;
-  
+
     try {
       console.log("Mengirim data ke server:", {
         shipping_fee: updatedShippingFee,
         total_fee: updatedTotalFee,
       });
-  
+
       const response = await fetch(`${API_BASE_URL}/payments/${selectedShippingPayment.payment_id}`, {
         method: "PATCH",
         headers: {
@@ -189,15 +188,15 @@ const TableTransaksi = () => {
           total_fee: updatedTotalFee,
         }),
       });
-  
+
       const result = await response.json();
-  
+
       if (!response.ok) {
         throw new Error(`Gagal menyimpan ongkir: ${JSON.stringify(result)}`);
       }
-  
+
       console.log("Ongkir berhasil diperbarui:", result);
-  
+
       // Perbarui state transaksi
       setTransactions((prev) =>
         prev.map((transaction) => {
@@ -211,27 +210,25 @@ const TableTransaksi = () => {
           return transaction;
         })
       );
-  
+
       console.log("State transaksi setelah update:", transactions);
-  
+
       closeShippingModal();
     } catch (error) {
       console.error("Error saving shipping fee:", error);
       setError("Gagal menyimpan ongkir. Periksa kembali data yang dikirim.");
     }
   };
-  
 
   const openProofModal = (proof: string) => {
     setSelectedProof(proof);
     setIsProofModalOpen(true);
   };
-  
+
   const closeProofModal = () => {
     setIsProofModalOpen(false);
     setSelectedProof(null);
   };
-  
 
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default">
@@ -354,45 +351,47 @@ const TableTransaksi = () => {
         </div>
       )}
       {isShippingModalOpen && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg">
-              <p>Masukkan biaya ongkir:</p>
-              <input
-                type="number"
-                className="border px-3 py-2 w-full mt-2"
-                value={newShippingFee}
-                onChange={(e) => setNewShippingFee(e.target.value)}
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <p>Masukkan biaya ongkir:</p>
+            <input
+              type="number"
+              className="border px-3 py-2 w-full mt-2"
+              value={newShippingFee}
+              onChange={(e) => setNewShippingFee(e.target.value)}
+            />
+            <div className="mt-4 flex justify-end">
+              <button className="bg-gray-400 text-white px-4 py-2 rounded mr-2" onClick={closeShippingModal}>
+                Batal
+              </button>
+              <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={saveShippingFee}>
+                Simpan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {isProofModalOpen && selectedProof && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
+            <p className="mb-4 text-center font-semibold">Bukti Pembayaran</p>
+            <div className="flex justify-center">
+              <Image 
+                src={selectedProof} 
+                alt="Bukti Pembayaran" 
+                width={600}
+                height={400}
+                className="max-w-[75vw] max-h-[60vh] rounded-md object-contain"
               />
-              <div className="mt-4 flex justify-end">
-                <button className="bg-gray-400 text-white px-4 py-2 rounded mr-2" onClick={closeShippingModal}>
-                  Batal
-                </button>
-                <button className="bg-blue-500 text-white px-4 py-2 rounded" onClick={saveShippingFee}>
-                  Simpan
-                </button>
-              </div>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button className="bg-gray-400 text-white px-4 py-2 rounded" onClick={closeProofModal}>
+                Tutup
+              </button>
             </div>
           </div>
-        )}
-        {isProofModalOpen && selectedProof && (
-          <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
-            <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
-              <p className="mb-4 text-center font-semibold">Bukti Pembayaran</p>
-              <div className="flex justify-center">
-                <img 
-                  src={selectedProof} 
-                  alt="Bukti Pembayaran" 
-                  className="max-w-[75vw] max-h-[60vh] rounded-md object-contain"
-                />
-              </div>
-              <div className="mt-4 flex justify-end">
-                <button className="bg-gray-400 text-white px-4 py-2 rounded" onClick={closeProofModal}>
-                  Tutup
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
+        </div>
+      )}
     </div>
   );
 };

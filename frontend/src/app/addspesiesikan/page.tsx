@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
+import Image from "next/image";
 
 const AddSpesiesIkan = () => {
   const router = useRouter();
@@ -139,10 +140,12 @@ const AddSpesiesIkan = () => {
                 <span>Pilih Gambar</span>
               </button>
               {imageUrl && (
-                <img
+                <Image
                   src={imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`} // Pastikan gambar berasal dari API_BASE_URL
                   alt="Preview"
-                  className="mt-2 w-32 h-32 object-cover rounded"
+                  width={128}
+                  height={128}
+                  className="mt-2 object-cover rounded"
                 />
               )}
             </div>

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Vendor } from "@/types/vendor";
+import Image from "next/image";
 
 const AddObat = () => {
   const router = useRouter();
@@ -34,7 +35,7 @@ const AddObat = () => {
     };
 
     fetchVendors();
-  }, []);
+  }, [API_BASE_URL]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,7 +47,6 @@ const AddObat = () => {
     setSuccess(false);
     setError("");
 
-    const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!formData.medicine_name || !formData.contain || !formData.dosage || !formData.price || !formData.vendor_id || !imageUrl) {
       setError("Semua field harus diisi.");
       setLoading(false);
@@ -161,7 +161,7 @@ const AddObat = () => {
                 <span>Pilih Gambar</span>
               </button>
               {imageUrl && (
-                <img src={imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`} alt="Preview" className="mt-2 w-32 h-32 object-cover rounded" />
+                <Image src={imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`} alt="Preview" width={128} height={128} className="mt-2 object-cover rounded" />
               )}
             </div>
 

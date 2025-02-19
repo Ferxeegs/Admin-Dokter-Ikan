@@ -18,11 +18,12 @@ const menuGroups = [
     menuItems: [
       {
         icon: (
-          <img
+          <Image
             className="fill-current"
             src="/images/icon/Dashboard.png"
             alt="Dashboard Icon"
             width={30}
+            height={30}
           />
         ),
         label: "Dashboard",
@@ -30,11 +31,12 @@ const menuGroups = [
       },
       {
         icon: (
-          <img
+          <Image
             className="fill-current"
             src="/images/icon/akun.svg"
             alt="Akun Icon"
             width={30}
+            height={30}
           />
         ),
         label: "Akun",
@@ -42,11 +44,12 @@ const menuGroups = [
       },
       {
         icon: (
-          <img
+          <Image
             className="fill-current"
             src="/images/icon/Konsultasi.png"
             alt="Activity Icon"
             width={30}
+            height={30}
           />
         ),
         label: "Konsultasi",
@@ -54,11 +57,12 @@ const menuGroups = [
       },
       {
         icon: (
-          <img
+          <Image
             className="fill-current"
             src="/images/icon/transaksi.svg"
             alt="Transaksi Icon"
             width={30}
+            height={30}
           />
         ),
         label: "Pembayaran",
@@ -66,11 +70,12 @@ const menuGroups = [
       },
       {
         icon: (
-          <img
+          <Image
             className="fill-current"
             src="/images/icon/SpesiesIkan.png"
             alt="Spesies Ikan Icon"
             width={30}
+            height={30}
           />
         ),
         label: "Spesies Ikan",
@@ -78,11 +83,12 @@ const menuGroups = [
       },
       {
         icon: (
-          <img
+          <Image
             className="fill-current"
             src="/images/icon/Obat.png"
             alt="Obat Icon"
             width={30}
+            height={30}
           />
         ),
         label: "Obat",
@@ -90,11 +96,12 @@ const menuGroups = [
       },
       {
         icon: (
-          <img
+          <Image
             className="fill-current"
             src="/images/icon/VendorObat.png"
             alt="Vendor Obat Icon"
             width={30}
+            height={30}
           />
         ),
         label: "Vendor Obat",
@@ -102,11 +109,12 @@ const menuGroups = [
       },
       {
         icon: (
-          <img
+          <Image
             className="fill-current"
             src="/images/icon/Article.png"
             alt="Article Icon"
             width={30}
+            height={30}
           />
         ),
         label: "Artikel",
@@ -114,11 +122,12 @@ const menuGroups = [
       },
       {
         icon: (
-          <img
+          <Image
             className="fill-current"
             src="/images/icon/Profil.png"
             alt="Profil Icon"
             width={30}
+            height={30}
           />
         ),
         label: "Profil",
@@ -127,7 +136,6 @@ const menuGroups = [
     ],
   },
 ];
-
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const pathname = usePathname();

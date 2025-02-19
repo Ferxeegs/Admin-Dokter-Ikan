@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect,useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { FishExpert } from "@/types/fishexpert";
+import Image from "next/image";
 
 const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
   const [expert, setExpert] = useState<FishExpert | null>(null);
@@ -26,25 +27,25 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
 
   useEffect(() => {
-      const fetchExpertDetail = async () => {
-        try {
-          const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`);
-          const data = await response.json();
-          setFormData({
-            name: data.name,
-            email: data.email,
-            phone_number: data.phone_number,
-            specialization: data.specialization,
-            experience : data.experience,
-            image_url: data.image_url,
-          });
-          setImageUrl(data.image_url);
-        } catch (error) {
-          console.error("Error fetching expert detail:", error);
-        }
-      };
-      fetchExpertDetail();
-  }, [id]);
+    const fetchExpertDetail = async () => {
+      try {
+        const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`);
+        const data = await response.json();
+        setFormData({
+          name: data.name,
+          email: data.email,
+          phone_number: data.phone_number,
+          specialization: data.specialization,
+          experience: data.experience,
+          image_url: data.image_url,
+        });
+        setImageUrl(data.image_url);
+      } catch (error) {
+        console.error("Error fetching expert detail:", error);
+      }
+    };
+    fetchExpertDetail();
+  }, [id, API_BASE_URL]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -69,28 +70,28 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
     
     console.log("Data yang akan dikirim ke server:", body);
     
-      try {
-        const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(body),
-        });
+    try {
+      const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
 
-        if (!response.ok) {
-          throw new Error("Gagal mengupdate data.");
-        }
-        setSuccess(true);
-        setTimeout(() => {
-          setSuccess(false);
-          router.push("/akun");
-        }, 2000);
-      } catch (error) {
-        setError("Terjadi kesalahan. Coba lagi.");
-      } finally {
-        setLoading(false);
+      if (!response.ok) {
+        throw new Error("Gagal mengupdate data.");
       }
+      setSuccess(true);
+      setTimeout(() => {
+        setSuccess(false);
+        router.push("/akun");
+      }, 2000);
+    } catch (error) {
+      setError("Terjadi kesalahan. Coba lagi.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleButtonClick = () => {
@@ -201,23 +202,25 @@ const FishExpertEditPage = ({ params }: { params: { id: string } }) => {
           </div>
 
           <div>
-              <label className="block text-gray-700">Photo Profile Expert</label>
-              <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
-              <button
-                className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-[#5abce0] transition text-sm font-semibold w-full md:w-auto border-2 border-[#69CBF4] flex items-center justify-center space-x-2"
-                onClick={handleButtonClick}
-                type="button"
-              >
-                <span>Pilih Gambar</span>
-              </button>
-              {imageUrl && (
-                <img
-                  src={`${API_BASE_URL}${imageUrl}`}
-                  alt="Preview"
-                  className="mt-2 w-32 h-32 object-cover rounded"
-                />
-              )}
-            </div>
+            <label className="block text-gray-700">Photo Profile Expert</label>
+            <input type="file" accept="image/*" className="hidden" ref={fileInputRef} onChange={handleFileChange} />
+            <button
+              className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-[#5abce0] transition text-sm font-semibold w-full md:w-auto border-2 border-[#69CBF4] flex items-center justify-center space-x-2"
+              onClick={handleButtonClick}
+              type="button"
+            >
+              <span>Pilih Gambar</span>
+            </button>
+            {imageUrl && (
+              <Image
+                src={`${API_BASE_URL}${imageUrl}`}
+                alt="Preview"
+                width={128}
+                height={128}
+                className="mt-2 object-cover rounded"
+              />
+            )}
+          </div>
 
           <button
             type="submit"

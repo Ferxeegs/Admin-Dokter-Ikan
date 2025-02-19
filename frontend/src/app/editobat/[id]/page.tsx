@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
 import { Medicine } from "@/types/medicine";
+import Image from "next/image";
 
 const EditObatPage = ({ params }: { params: { id: string } }) => {
   const [medicine, setMedicine] = useState<Medicine | null>(null);
@@ -36,7 +37,7 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
           contain: data.contain,
           dosage: data.dosage,
           price: data.price,
-          stock : data.stock,
+          stock: data.stock,
           medicine_image: data.medicine_image,
         });
         setImageUrl(data.medicine_image); // Menampilkan gambar yang sudah ada
@@ -46,7 +47,7 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
       }
     };
     fetchMedicineDetail();
-  }, [id]);
+  }, [id, API_BASE_URL]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -212,10 +213,12 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
                 <span>Pilih Gambar</span>
               </button>
               {imageUrl && (
-                <img
+                <Image
                   src={`${API_BASE_URL}${imageUrl}`}
                   alt="Preview"
-                  className="mt-2 w-32 h-32 object-cover rounded"
+                  width={128}
+                  height={128}
+                  className="mt-2 object-cover rounded"
                 />
               )}
             </div>
@@ -245,7 +248,6 @@ const EditObatPage = ({ params }: { params: { id: string } }) => {
       </div>
     </DefaultLayout>
   );
-
 };
 
 export default EditObatPage;
