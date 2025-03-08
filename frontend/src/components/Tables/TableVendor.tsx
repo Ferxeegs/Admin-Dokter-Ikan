@@ -111,7 +111,7 @@ const TableVendor = () => {
                   <td className="px-4 py-2">
                     <button
                       className="ml-4 text-blue-500"
-                      onClick={() => router.push(`/editvendorobat/${vendor.vendor_id}`)}
+                      onClick={() => router.push(`/editvendorobat?id=${vendor.vendor_id}`)}
                     >
                       Edit
                     </button>

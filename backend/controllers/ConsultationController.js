@@ -5,7 +5,7 @@ import FishExpert from '../models/FishExpertsModel.js';
 import FishExpertAnswer from '../models/FishExpertAnswerModel.js';
 import jwt from "jsonwebtoken";
 import FishTypes from '../models/FishTypeModel.js';
-
+import "regenerator-runtime/runtime.js";
 
 // Fungsi untuk mendapatkan semua konsultasi
 export const getAllConsultations = async (req, res) => {
@@ -108,6 +108,7 @@ export const updateConsultation = async (req, res) => {
     console.log("Existing consultation:", consultation.toJSON());
     console.log("Received fishExpert_id:", fishExpert_id);
     console.log("Received consultation_status:", consultation_status);
+   
 
     // Validasi input
     if (!fishExpert_id) {
@@ -134,7 +135,8 @@ export const updateConsultation = async (req, res) => {
 };
 
 export const getConsultationHistory = async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  const authorizationHeader = req.headers.authorization;
+  const token = authorizationHeader ? authorizationHeader.split(" ")[1] : null;
 
   if (!token) {
     return res.status(401).json({ message: "Token tidak ditemukan." });

@@ -132,8 +132,8 @@ return (
                 </td>
                 <td className="border-b px-4 py-5">{user.role}</td>
                 <td className="border-b px-4 py-5">
-                  <button className="text-blue-500" onClick={() => router.push(`/edituser/${user.user_id}`)}>Edit</button>
-                  <button className="ml-4 text-green-500" onClick={() => router.push(`/userdetail/${user.user_id}`)}>Detail</button>               
+                  <button className="text-blue-500" onClick={() => router.push(`/edituser?id=${user.user_id}`)}>Edit</button>
+                  <button className="ml-4 text-green-500" onClick={() => router.push(`/userdetail?id=${user.user_id}`)}>Detail</button>               
                   <button className="ml-4 text-red-500" onClick={() => handleDeleteConfirm(user.user_id, "user")}>Hapus</button>
                 </td>
               </tr>
@@ -205,8 +205,8 @@ return (
                 <td className="border-b px-4 py-5">{expert.specialization}</td>
                 <td className="border-b px-4 py-5">{expert.experience}</td>
                 <td className="border-b px-4 py-5">
-                  <button className="text-blue-500" onClick={() => router.push(`/editexpert/${expert.fishExperts_id}`)}>Edit</button>
-                  <button className="ml-4 text-green-500" onClick={() => router.push(`/expertdetail/${expert.fishExperts_id}`)}>Detail</button>
+                  <button className="text-blue-500" onClick={() => router.push(`/editexpert?id=${expert.fishExperts_id}`)}>Edit</button>
+                  <button className="ml-4 text-green-500" onClick={() => router.push(`/expertdetail?id=${expert.fishExperts_id}`)}>Detail</button>
                   <button className="ml-4 text-red-500" onClick={() => handleDeleteConfirm(expert.fishExperts_id, "expert")}>Hapus</button>
                 </td>
               </tr>

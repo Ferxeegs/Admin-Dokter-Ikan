@@ -103,13 +103,13 @@ const TableSpesiesIkan = () => {
                     <td className="border-b px-4 py-5">
                       <button
                         className="ml-4 text-blue-500"
-                        onClick={() => router.push(`/editspesiesikan/${fish.fish_type_id}`)}
+                        onClick={() => router.push(`/editspesiesikan?id=${fish.fish_type_id}`)}
                       >
                         Edit
                       </button>
                       <button
                         className="ml-4 text-green-500"
-                        onClick={() => router.push(`/spesiesikandetail/${fish.fish_type_id}`)}
+                        onClick={() => router.push(`/spesiesikandetail?id=${fish.fish_type_id}`)}
                       >
                         Detail
                       </button>

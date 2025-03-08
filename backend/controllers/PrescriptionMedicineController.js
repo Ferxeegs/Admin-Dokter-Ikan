@@ -1,5 +1,5 @@
 import PrescriptionMedicine from '../models/PrescriptionMedicineModel.js';
-
+import "regenerator-runtime/runtime.js";
 export const getAllPrescriptionMedicines = async (req, res) => {
   try {
     const prescriptionMedicines = await PrescriptionMedicine.findAll();

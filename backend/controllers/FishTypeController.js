@@ -1,5 +1,5 @@
 import FishType from "../models/FishTypeModel.js"; // Import model FishType
-
+import "regenerator-runtime/runtime.js";
 // Fungsi untuk mendapatkan semua Fish Types
 export const getAllFishTypes = async (req, res) => {
   try {

@@ -2,7 +2,7 @@ import UserConsultation from "../models/UserConsultationModel.js";
 import { validationResult } from "express-validator"; // Untuk validasi input
 import db from "../config/Database.js";
 import jwt from "jsonwebtoken"; 
-
+import "regenerator-runtime/runtime.js";
 // Fungsi untuk mendapatkan semua data konsultasi
 export const getAllUserConsultations = async (req, res) => {
   try {
@@ -70,7 +70,8 @@ export const getUserConsultationById = async (req, res) => {
 
 
 export const getUserConsultationHistory = async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1];
+  const authorizationHeader = req.headers.authorization;
+  const token = authorizationHeader ? authorizationHeader.split(" ")[1] : null;
 
   if (!token) {
     return res.status(401).json({ message: "Token tidak ditemukan." });

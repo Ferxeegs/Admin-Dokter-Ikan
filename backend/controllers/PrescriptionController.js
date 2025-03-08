@@ -4,7 +4,7 @@ import Consultation from '../models/ConsultationModel.js';
 import FishExperts from '../models/FishExpertsModel.js';
 import PrescriptionMedicine from '../models/PrescriptionMedicineModel.js';
 import Medicine from '../models/MedicineModel.js';
-
+import "regenerator-runtime/runtime.js";
 // Fungsi untuk mendapatkan semua resep medis
 export const getAllPrescriptions = async (req, res) => {
   try {
@@ -89,11 +89,11 @@ export const getPrescriptionsByConsultationId = async (req, res) => {
         console.log(`Medicine found: ${medicine ? medicine.medicine_name : 'Tidak ditemukan'}`); // Log nama obat
 
         return {
-          title: medicine?.medicine_name || 'Tidak ditemukan',
-          content: medicine?.contain || '',
-          dose: medicine?.dosage || '',
-          image: medicine?.medicine_image || '',
-          price: medicine?.price || '',
+          title: medicine ? medicine.medicine_name : 'Tidak ditemukan',
+          content: medicine ? medicine.contain : '',
+          dose: medicine ? medicine.dosage : '',
+          image: medicine ? medicine.medicine_image : '',
+          price: medicine ? medicine.price : '',
         };
       })
     );

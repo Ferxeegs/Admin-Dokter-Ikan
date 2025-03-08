@@ -1,6 +1,6 @@
 import FishDisease from "../models/FishDiseaseModel.js";
 import FishType from "../models/FishTypeModel.js";
-
+import "regenerator-runtime/runtime.js";
 // Fungsi untuk mendapatkan semua data penyakit ikan
 export const getAllFishDiseases = async (req, res) => {
   try {

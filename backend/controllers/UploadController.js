@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs";
 import multer from "multer";
+import "regenerator-runtime/runtime.js";
 
 const UPLOADS_DIR = "uploads";
 

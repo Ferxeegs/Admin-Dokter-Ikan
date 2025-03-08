@@ -116,13 +116,13 @@ const TableObat = () => {
                   <td className="border-b px-4 py-5">
                     <button
                       className="ml-4 text-blue-500"
-                      onClick={() => router.push(`/editobat/${medicine.medicine_id}`)}
+                      onClick={() => router.push(`/editobat?id=${medicine.medicine_id}`)}
                     >
                       Edit
                     </button>
                     <button
                       className="ml-4 text-green-500"
-                      onClick={() => router.push(`/obatdetail/${medicine.medicine_id}`)}
+                      onClick={() => router.push(`/obatdetail?id=${medicine.medicine_id}`)}
                     >
                       Detail
                     </button>                   

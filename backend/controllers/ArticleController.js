@@ -1,5 +1,5 @@
 import Article from "../models/ArticleModel.js";
-
+import "regenerator-runtime/runtime.js";
 // Fungsi untuk mendapatkan semua artikel
 export const getAllArticles = async (req, res) => {
   try {
