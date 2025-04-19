@@ -68,13 +68,10 @@ const EditObatPage = () => {
       return;
     }
 
-    // Jika gambar diubah, kirim gambar dengan form-data
-    let body: any = { ...formData };
-
-    if (imageUrl && imageUrl.startsWith("/uploads")) {
-      body.medicine_image = imageUrl;  // Menggunakan gambar baru
-    }
-    
+    const body = {
+      ...formData,
+      medicine_image: imageUrl || formData.medicine_image, // Gunakan imageUrl jika ada, atau gunakan nilai sebelumnya
+    };
     console.log("Data yang akan dikirim ke server:", body);
 
     try {
@@ -109,23 +106,26 @@ const EditObatPage = () => {
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-  
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
     const formData = new FormData();
-    formData.append("files", file);
-  
+    Array.from(files).forEach((file) => formData.append("files", file));
+
     try {
-      const response = await fetch(`${API_BASE_URL}/upload`, {
+      const response = await fetch(`${API_BASE_URL}/uploadcloudmed`, {
         method: "POST",
-        body: formData,  // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
+        body: formData, // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
       });
-  
+
       const result = await response.json();
       console.log("Hasil unggahan gambar:", result);
-  
+
       if (response.ok) {
-        setImageUrl(result.filePath); // Menggunakan path relatif
+        const uploadedUrl = result.images[0].url;
+        setImageUrl(uploadedUrl);
+        setFormData((prev) => ({ ...prev, image_url: uploadedUrl }));
+
       } else {
         alert("Upload gagal: " + result.message);
       }
@@ -217,7 +217,7 @@ const EditObatPage = () => {
               </button>
               {imageUrl && (
                 <Image
-                  src={`/${API_BASE_URL}${imageUrl}`}
+                  src={imageUrl}
                   alt="Preview"
                   width={128}
                   height={128}

@@ -68,7 +68,7 @@ const ObatDetailPage = () => {
               <div className="mt-4 flex justify-center">
                 {medicine.medicine_image ? (
                   <Image
-                    src={`/${API_BASE_URL}${medicine.medicine_image}`}
+                    src={medicine.medicine_image}
                     alt={medicine.medicine_image}
                     width={600}
                     height={300}

@@ -51,7 +51,7 @@ const FishExpertDetailPage = () => {
           <div className="mt-4 flex justify-center">
             {expert.image_url ? (
               <Image
-                src={`${API_BASE_URL}${expert.image_url}`}
+                src={expert.image_url}
                 alt={expert.name}
                 width={600}
                 height={300}

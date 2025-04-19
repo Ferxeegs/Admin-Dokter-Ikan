@@ -56,7 +56,7 @@ const SpesiesIkanDetailPage = () => {
             <div className="mt-4 flex justify-center">
               {fish.image ? (
                 <Image
-                  src={`/${API_BASE_URL}${fish.image}`}
+                  src={fish.image}
                   alt={fish.name}
                   width={600}
                   height={300}

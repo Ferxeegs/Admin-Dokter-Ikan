@@ -64,7 +64,7 @@ const ArticleDetailPage = () => {
             <div className="mt-4 flex justify-center">
               {article.urltoimage ? (
                 <Image
-                  src={`${API_BASE_URL}${article.urltoimage}`}
+                  src={article.urltoimage}
                   alt={article.title}
                   width={600}
                   height={300}

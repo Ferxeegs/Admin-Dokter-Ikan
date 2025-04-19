@@ -82,23 +82,23 @@ const AddObat = () => {
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
   
     const formData = new FormData();
-    formData.append("files", file);
+    Array.from(files).forEach((file) => formData.append("files", file));
   
     try {
-      const response = await fetch(`${API_BASE_URL}/upload`, {
+      const response = await fetch(`${API_BASE_URL}/uploadcloudmed`, {
         method: "POST",
-        body: formData,  // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
+        body: formData, // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
       });
   
       const result = await response.json();
       console.log("Hasil unggahan gambar:", result);
   
       if (response.ok) {
-        setImageUrl(result.filePath); // Menggunakan path relatif
+        setImageUrl(result.images[0].url); // Menggunakan URL gambar dari Cloudinary
       } else {
         alert("Upload gagal: " + result.message);
       }
@@ -161,7 +161,7 @@ const AddObat = () => {
                 <span>Pilih Gambar</span>
               </button>
               {imageUrl && (
-                <Image src={imageUrl.startsWith("http") ? imageUrl : `${API_BASE_URL}${imageUrl}`} alt="Preview" width={128} height={128} className="mt-2 object-cover rounded" />
+                <Image src={imageUrl} alt="Preview" width={128} height={128} className="mt-2 object-cover rounded" />
               )}
             </div>
 

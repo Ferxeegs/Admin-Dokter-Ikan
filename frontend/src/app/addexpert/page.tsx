@@ -73,23 +73,23 @@ const AddExpert = () => {
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
   
     const formData = new FormData();
-    formData.append("files", file);
+    Array.from(files).forEach((file) => formData.append("files", file));
   
     try {
-      const response = await fetch(`${API_BASE_URL}/upload`, {
+      const response = await fetch(`${API_BASE_URL}/uploadcloudexpert`, {
         method: "POST",
-        body: formData,  // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
+        body: formData, // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
       });
   
       const result = await response.json();
       console.log("Hasil unggahan gambar:", result);
   
       if (response.ok) {
-        setImageUrl(result.filePath); // Menggunakan path relatif
+        setImageUrl(result.images[0].url); // Menggunakan URL gambar dari Cloudinary
       } else {
         alert("Upload gagal: " + result.message);
       }

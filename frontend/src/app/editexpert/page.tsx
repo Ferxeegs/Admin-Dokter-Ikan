@@ -59,20 +59,21 @@ const FishExpertEditPage = () => {
     setLoading(true);
     setSuccess(false);
     setError("");
+
     if (!formData.name || !formData.email || !formData.phone_number || !formData.specialization || !formData.experience) {
       setError("Semua field harus diisi.");
       setLoading(false);
       return;
     }
 
-    let body: any = { ...formData };
-
-    if (imageUrl && imageUrl.startsWith("/uploads")) {
-      body.image_url = imageUrl;  // Menggunakan gambar baru
-    }
-    
+    // Pastikan imageUrl disertakan dalam body
+    const body = {
+      ...formData,
+      image_url: imageUrl || formData.image_url, // Gunakan imageUrl jika ada, atau gunakan nilai sebelumnya
+    };
+   
     console.log("Data yang akan dikirim ke server:", body);
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/fishexperts/${id}`, {
         method: "PUT",
@@ -104,23 +105,26 @@ const FishExpertEditPage = () => {
   };
 
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-  
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
     const formData = new FormData();
-    formData.append("files", file);
-  
+    Array.from(files).forEach((file) => formData.append("files", file));
+
     try {
-      const response = await fetch(`${API_BASE_URL}/upload`, {
+      const response = await fetch(`${API_BASE_URL}/uploadcloudexpert`, {
         method: "POST",
-        body: formData,  // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
+        body: formData, // Jangan tentukan 'Content-Type' karena FormData akan melakukannya otomatis
       });
-  
+
       const result = await response.json();
       console.log("Hasil unggahan gambar:", result);
-  
+
       if (response.ok) {
-        setImageUrl(result.filePath); // Menggunakan path relatif
+        const uploadedUrl = result.images[0].url;
+        setImageUrl(uploadedUrl);
+        setFormData((prev) => ({ ...prev, image_url: uploadedUrl }));
+
       } else {
         alert("Upload gagal: " + result.message);
       }
@@ -216,7 +220,7 @@ const FishExpertEditPage = () => {
             </button>
             {imageUrl && (
               <Image
-                src={`${API_BASE_URL}${imageUrl}`}
+                src={imageUrl}
                 alt="Preview"
                 width={128}
                 height={128}
