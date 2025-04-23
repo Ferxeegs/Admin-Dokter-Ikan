@@ -168,35 +168,40 @@ const TableTransaksi = () => {
   // Simpan biaya ongkir ke database
   const saveShippingFee = async () => {
     if (!selectedShippingPayment || newShippingFee === "") return;
-
+  
     const updatedShippingFee = parseFloat(newShippingFee);
-    const updatedTotalFee = selectedShippingPayment.total_fee + updatedShippingFee;
-
+    const previousShippingFee = selectedShippingPayment.shipping_fee || 0; // Jika belum ada shipping_fee, gunakan 0
+    const updatedTotalFee =
+      selectedShippingPayment.total_fee - previousShippingFee + updatedShippingFee;
+  
     try {
       console.log("Mengirim data ke server:", {
         shipping_fee: updatedShippingFee,
         total_fee: updatedTotalFee,
       });
-
-      const response = await fetch(`${API_BASE_URL}/payments/${selectedShippingPayment.payment_id}`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          shipping_fee: updatedShippingFee,
-          total_fee: updatedTotalFee,
-        }),
-      });
-
+  
+      const response = await fetch(
+        `${API_BASE_URL}/payments/${selectedShippingPayment.payment_id}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            shipping_fee: updatedShippingFee,
+            total_fee: updatedTotalFee,
+          }),
+        }
+      );
+  
       const result = await response.json();
-
+  
       if (!response.ok) {
         throw new Error(`Gagal menyimpan ongkir: ${JSON.stringify(result)}`);
       }
-
+  
       console.log("Ongkir berhasil diperbarui:", result);
-
+  
       // Perbarui state transaksi
       setTransactions((prev) =>
         prev.map((transaction) => {
@@ -210,9 +215,9 @@ const TableTransaksi = () => {
           return transaction;
         })
       );
-
+  
       console.log("State transaksi setelah update:", transactions);
-
+  
       closeShippingModal();
     } catch (error) {
       console.error("Error saving shipping fee:", error);
@@ -372,26 +377,26 @@ const TableTransaksi = () => {
         </div>
       )}
       {isProofModalOpen && selectedProof && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
-          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
-            <p className="mb-4 text-center font-semibold">Bukti Pembayaran</p>
-            <div className="flex justify-center">
-              <Image 
-                src={selectedProof} 
-                alt="Bukti Pembayaran" 
-                width={600}
-                height={400}
-                className="max-w-[75vw] max-h-[60vh] rounded-md object-contain"
-              />
-            </div>
-            <div className="mt-4 flex justify-end">
-              <button className="bg-gray-400 text-white px-4 py-2 rounded" onClick={closeProofModal}>
-                Tutup
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 p-4">
+    <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
+      <p className="mb-4 text-center font-semibold">Bukti Pembayaran</p>
+      <div className="flex justify-center">
+        <Image 
+          src={selectedProof} 
+          alt="Bukti Pembayaran" 
+          width={600}
+          height={400}
+          className="rounded-md object-contain max-w-full max-h-[60vh]"
+        />
+      </div>
+      <div className="mt-4 flex justify-end">
+        <button className="bg-gray-400 text-white px-4 py-2 rounded" onClick={closeProofModal}>
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
