@@ -10,6 +10,7 @@ const TableActivity = () => {
   const [selectedExpert, setSelectedExpert] = useState<any | null>(null);
   const [selectedConsultationId, setSelectedConsultationId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false); // ✅ Tambahan modal sukses
 
   useEffect(() => {
     fetchActivities();
@@ -38,7 +39,6 @@ const TableActivity = () => {
       console.error(" Error fetching consultations:", error);
     }
   };  
-  
 
   const fetchFishExperts = async () => {
     const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -101,18 +101,18 @@ const TableActivity = () => {
   
       console.log("✅ Konsultasi berhasil diperbarui ke 'In Consultation'");
   
-      // Refresh data agar status berubah di UI
       await fetchActivities();
-  
-      // Reset state dan tutup pop-up
       setSelectedExpert(null);
       setSelectedConsultationId(null);
+
+      // ✅ Tampilkan modal sukses selama 2 detik
+      setShowSuccessModal(true);
+      setTimeout(() => setShowSuccessModal(false), 2000);
+
     } catch (error) {
       console.error("Terjadi kesalahan saat update konsultasi:", error);
     }
   };  
-  
-  
 
   const filteredActivities = activities.filter((activity) =>
     activity.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -155,8 +155,8 @@ const TableActivity = () => {
                     {visibleDropdownIndex === key && (
                       <div className="absolute bg-white shadow-lg rounded-md mt-2 w-48 max-h-60 overflow-y-auto border border-gray-200 z-10">
                         <ul>
-                        {fishExperts.map((expert, index) => (
-                          <li key={index}
+                          {fishExperts.map((expert, index) => (
+                            <li key={index}
                               className="py-2 px-4 cursor-pointer hover:bg-gray-200"
                               onClick={() => handleExpertSelection(expert)}
                             >
@@ -188,8 +188,9 @@ const TableActivity = () => {
           </tbody>
         </table>
       </div>
+
       {selectedExpert && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-40">
           <div className="bg-white p-5 rounded-md shadow-lg w-1/3">
             <h3 className="text-xl font-semibold">Detail Tenaga Ahli</h3>
             <p><strong>Nama:</strong> {selectedExpert.name}</p>
@@ -204,6 +205,14 @@ const TableActivity = () => {
             </button>
           </div>
         </div>
+      )}
+
+      {showSuccessModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="bg-white px-10 py-8 rounded-xl shadow-2xl w-[400px] text-center">
+          <p className="text-green-700 font-bold text-2xl">✅ Tenaga Ahli berhasil dipilih</p>
+        </div>
+      </div>
       )}
     </div>
   );
