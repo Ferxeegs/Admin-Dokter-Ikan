@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/Breadcrumbs/Breadcrumb";
-import { Vendor } from "@/types/vendor";
+// import { Vendor } from "@/types/vendor";
 import Image from "next/image";
 
 const AddObat = () => {
@@ -15,10 +15,10 @@ const AddObat = () => {
     dosage: "",
     price: "",
     stock: "",
-    vendor_id: "",
+    // vendor_id: "",
     medicine_image: ""
   });
-  const [vendors, setVendors] = useState<Vendor[]>([]);
+  // const [vendors, setVendors] = useState<Vendor[]>([]);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
@@ -26,16 +26,16 @@ const AddObat = () => {
   const [imageUrl, setImageUrl] = useState<string>(""); // Menyimpan URL gambar yang diupload
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  useEffect(() => {
-    // Fetch vendors data when component mounts
-    const fetchVendors = async () => {
-      const response = await fetch(`${API_BASE_URL}/vendors`);
-      const data = await response.json();
-      setVendors(data);
-    };
+  // useEffect(() => {
+  //   // Fetch vendors data when component mounts
+  //   const fetchVendors = async () => {
+  //     const response = await fetch(`${API_BASE_URL}/vendors`);
+  //     const data = await response.json();
+  //     setVendors(data);
+  //   };
 
-    fetchVendors();
-  }, [API_BASE_URL]);
+  //   fetchVendors();
+  // }, [API_BASE_URL]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -47,7 +47,7 @@ const AddObat = () => {
     setSuccess(false);
     setError("");
 
-    if (!formData.medicine_name || !formData.contain || !formData.dosage || !formData.price || !formData.vendor_id || !imageUrl) {
+    if (!formData.medicine_name || !formData.contain || !formData.dosage || !formData.price || !imageUrl) {
       setError("Semua field harus diisi.");
       setLoading(false);
       return;
@@ -57,7 +57,7 @@ const AddObat = () => {
       const response = await fetch(`${API_BASE_URL}/medicines`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ...formData, price: Number(formData.price), vendor_id: Number(formData.vendor_id), medicine_image: imageUrl }),
+        body: JSON.stringify({ ...formData, price: Number(formData.price), medicine_image: imageUrl }),
       });
 
       if (!response.ok) {
@@ -144,7 +144,7 @@ const AddObat = () => {
               <input type="number" name="stock" value={formData.stock} onChange={handleChange} className="w-full p-2 border rounded" required />
             </div>
 
-            <div>
+            {/* <div>
               <label className="block text-gray-700">Pilih Vendor</label>
               <select name="vendor_id" value={formData.vendor_id} onChange={handleChange} className="w-full p-2 border rounded" required>
                 <option value="">Pilih Vendor</option>
@@ -152,7 +152,7 @@ const AddObat = () => {
                   <option key={vendor.vendor_id} value={vendor.vendor_id}>{vendor.vendor_name}</option>
                 ))}
               </select>
-            </div>
+            </div> */}
 
             <div>
               <label className="block text-gray-700">Gambar Obat</label>

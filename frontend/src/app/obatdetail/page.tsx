@@ -13,7 +13,7 @@ const ObatDetailPage = () => {
   const id = searchParams.get("id");
   const router = useRouter(); // Hook untuk navigasi
   const [medicine, setMedicine] = useState<Medicine | null>(null);
-  const [vendorName, setVendorName] = useState<string | null>(null);
+  // const [vendorName, setVendorName] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -28,12 +28,12 @@ const ObatDetailPage = () => {
         setMedicine(medicineData);
 
         // Ambil data vendor berdasarkan vendor_id
-        const vendorResponse = await fetch(`${API_BASE_URL}/vendors`);
-        if (!vendorResponse.ok) throw new Error("Gagal mengambil data vendor");
+        // const vendorResponse = await fetch(`${API_BASE_URL}/vendors`);
+        // if (!vendorResponse.ok) throw new Error("Gagal mengambil data vendor");
 
-        const vendors: Vendor[] = await vendorResponse.json();
-        const vendor = vendors.find((v) => v.vendor_id === medicineData.vendor_id);
-        setVendorName(vendor ? vendor.vendor_name : "Tidak ditemukan");
+        // const vendors: Vendor[] = await vendorResponse.json();
+        // const vendor = vendors.find((v) => v.vendor_id === medicineData.vendor_id);
+        // setVendorName(vendor ? vendor.vendor_name : "Tidak ditemukan");
       } catch (err) {
         setError("Terjadi kesalahan saat mengambil data.");
       } finally {
@@ -64,7 +64,7 @@ const ObatDetailPage = () => {
               <p><strong>Dosis:</strong> {medicine.dosage}</p>
               <p><strong>Harga:</strong> Rp {medicine.price.toLocaleString()}</p>
               <p><strong>Stok:</strong> {medicine.stock.toLocaleString()}</p>
-              <p><strong>Vendor:</strong> {vendorName}</p>
+              {/* <p><strong>Vendor:</strong> {vendorName}</p> */}
               <div className="mt-4 flex justify-center">
                 {medicine.medicine_image ? (
                   <Image
